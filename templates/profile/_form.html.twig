@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProfileController!{% endblock %}
+
+{% block body %}
+    {{ form_start(profileForm) }}
+    {{ form_row(profileForm.weight) }}
+    {{ form_row(profileForm.height) }}
+    {{ form_row(profileForm.age) }}
+    {{ form_row(profileForm.gender) }}
+    {{ form_row(profileForm.activitylevel) }}
+    {{ form_row(profileForm.dietpreferences) }}
+    {{ form_row(profileForm.allergies) }}
+    <button type="submit" class="btn">save</button>
+    {{ form_end(profileForm) }}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% block header %}
+<header class="header-dietify">
+    <div class="header-dietify__container">
+        <img src="{{ asset('images/Dietifyy.png') }}" alt="Dietify logo" class="header-dietify__logo">
+        <div class="header-dietify__cases">
+            <a href="{{ path('app_profile_bmi') }}">BMI</a>
+            <a href="{{ path('app_profile_diet_show') }}">MEALPLAN</a>
+            <a href="{{ path('app_profile') }}">PROFILE</a>
+        </div>
+    </div>
+</header>
+{% endblock %}

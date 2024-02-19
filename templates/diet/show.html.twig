@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <table>
+        <thead>
+        <tr>
+            {% for mealDay in mealPlans|keys %}
+                <th>{{ mealDay|capitalize }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for mealType, meals in mealPlans.monday[0] %}
+            <tr>
+                {% for mealDay in mealPlans|keys %}
+                        {% if mealPlans[mealDay][0][mealType] is defined %}
+                            <td>{{ mealType|capitalize }} {{ mealPlans[mealDay][0][mealType].time }}</td>
+                        {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for mealDay in mealPlans|keys %}
+                    <td>
+                        {% if mealPlans[mealDay][0][mealType] is defined %}
+                            {% set meal = mealPlans[mealDay][0][mealType] %}
+                            <div>{{ meal.name }}</div>
+                            <div>{{ meal.calories }} kcal</div>
+                            <div>{{ meal.protein }} protein</div>
+                            <div>{{ meal.carbohydrates }} carbohydrates</div>
+                        {% else %}
+                            <div>---</div>
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div>
+        <a href="{{ path('app_profile_diet') }}">Generate new plan</a>
+        <a href="{{ path('app_profile_diet_list') }}">Shopping list</a>
+    </div>
+{% endblock %}
