@@ -26,15 +26,22 @@ class MealRepository extends ServiceEntityRepository
     /**
      * @return Meals[] Returns an array of Meal objects
      */
-    public function findByDay($value): array
+    public function findDayByLatestWeek(string $value): array|null
     {
+        $latestWeekId = $this->findLatestWeek();
+
+        if(!$latestWeekId) {
+            return NULL;
+        }
+
         return $this->createQueryBuilder('m')
-            ->andWhere('m.day = :val')
+            ->innerJoin('m.mealPlan', 'mp')
+            ->where('mp.weekId = :weekId')
+            ->andWhere('m.dayOfWeek = :val')
             ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
+            ->setParameter('weekId', $latestWeekId)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult() ?? NULL;
     }
 
     public function findMealsForLatestWeek(): array
@@ -51,13 +58,13 @@ class MealRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findLatestWeek(): bool|float|int|string
+    public function findLatestWeek(): bool|float|int|string|null
     {
         return $this->getEntityManager()->createQueryBuilder()
             ->select('MAX(mp.weekId)')
             ->from(MealPlan::class, 'mp')
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult() ?? NULL;
     }
 
     public function findShoppingList(): array {
@@ -70,6 +77,23 @@ class MealRepository extends ServiceEntityRepository
             ->setParameter('weekId', $latestWeekId)
             ->getQuery()
             ->getResult();
+    }
+
+
+    public function findByMealType(int $mealId, string $mealType): ?array {
+        $allowedMealTypes = ['breakfast', 'brunch', 'lunch', 'snack', 'dinner'];
+        if (!in_array($mealType, $allowedMealTypes)) {
+            throw new \InvalidArgumentException('Invalid meal type');
+        }
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('m.' . $mealType)
+            ->from('App\Entity\Meals', 'm')
+            ->where('m.id = :mealId')
+            ->setParameter('mealId', $mealId);
+
+        $query = $qb->getQuery();
+        return $query->getOneOrNullResult();
     }
 
 }

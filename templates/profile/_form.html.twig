@@ -1,16 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProfileController!{% endblock %}
-
 {% block body %}
-    {{ form_start(profileForm) }}
-    {{ form_row(profileForm.weight) }}
-    {{ form_row(profileForm.height) }}
-    {{ form_row(profileForm.age) }}
-    {{ form_row(profileForm.gender) }}
-    {{ form_row(profileForm.activitylevel) }}
-    {{ form_row(profileForm.dietpreferences) }}
-    {{ form_row(profileForm.allergies) }}
-    <button type="submit" class="btn">save</button>
-    {{ form_end(profileForm) }}
+    <div class="sidebar">
+        <a href="{{ path('app_profile') }}">Profile</a>
+        <a href="{{ path('app_user', {'id': app.user.id}) }}">Settings</a>
+        <a href="{{ path('app_favourites') }}">Favourites</a>
+    </div>
+
+    <div class="main-content-with-sidebar">
+        {{ form_start(profileForm, {'attr': {'class': 'profile-form'}}) }}
+        <div class="profile-form-row">
+            {{ form_row(profileForm.weight, {'attr': {'class': 'form-control'}}) }}
+            {{ form_row(profileForm.height, {'attr': {'class': 'form-control'}}) }}
+            {{ form_row(profileForm.age, {'attr': {'class': 'form-control'}}) }}
+            {{ form_row(profileForm.gender, {'attr': {'class': 'form-control'}}) }}
+            {{ form_row(profileForm.activitylevel, {'attr': {'class': 'form-control'}}) }}
+            {{ form_row(profileForm.dietpreferences, {'attr': {'class': 'form-control'}}) }}
+            {{ form_row(profileForm.allergies, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <button type="submit" class="btn">save</button>
+        {{ form_end(profileForm) }}
+    </div>
 {% endblock %}

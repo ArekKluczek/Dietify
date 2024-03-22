@@ -16,9 +16,6 @@ class MealPlan
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $totalCalories = null;
-
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'diets')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $userid = null;
@@ -37,18 +34,6 @@ class MealPlan
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTotalCalories(): ?int
-    {
-        return $this->totalCalories;
-    }
-
-    public function setTotalCalories(?int $totalCalories): static
-    {
-        $this->totalCalories = $totalCalories;
-
-        return $this;
     }
 
     /**
@@ -72,7 +57,6 @@ class MealPlan
     public function removeMeals(Meals $meals): static
     {
         if ($this->meals->removeElement($meals)) {
-            // set the owning side to null (unless already changed)
             if ($meals->getMealPlan() === $this) {
                 $meals->setMealPlan(null);
             }
@@ -116,12 +100,10 @@ class MealPlan
 
     public function setShopList(?ShoppingList $shopList): static
     {
-        // unset the owning side of the relation if necessary
         if ($shopList === null && $this->shopList !== null) {
             $this->shopList->setMealPlan(null);
         }
 
-        // set the owning side of the relation if necessary
         if ($shopList !== null && $shopList->getMealPlan() !== $this) {
             $shopList->setMealPlan($this);
         }

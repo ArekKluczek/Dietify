@@ -1,44 +1,35 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <table>
-        <thead>
-        <tr>
-            {% for mealDay in mealPlans|keys %}
-                <th>{{ mealDay|capitalize }}</th>
-            {% endfor %}
-        </tr>
-        </thead>
-        <tbody>
-        {% for mealType, meals in mealPlans.monday[0] %}
-            <tr>
-                {% for mealDay in mealPlans|keys %}
-                        {% if mealPlans[mealDay][0][mealType] is defined %}
-                            <td>{{ mealType|capitalize }} {{ mealPlans[mealDay][0][mealType].time }}</td>
-                        {% endif %}
+    <div class="meal-plan-container">
+        {% for mealDay, mealsOfDay in mealPlans %}
+            <div class="meal-plan-day">
+                <h2 class="meal-plan-day-title">{{ mealDay|capitalize }}</h2>
+                {% for mealType, meal in mealsOfDay[0] %}
+                    <div class="meal-plan-meal">
+                        <div class="meal-plan-meal-time">{{ mealType|capitalize }} {{ meal.time }}</div>
+                        <div class="meal-plan-meal-details">
+                            <div class="meal-plan-meal-name">{{ meal.name }}</div>
+                            <div class="meal-plan-meal-info">
+                                <span class="meal-plan-meal-calories">{{ meal.calories }} kcal</span>
+                                <span class="meal-plan-meal-protein">{{ meal.protein }} protein</span>
+                                <span class="meal-plan-meal-carbs">{{ meal.carbohydrates }} carbohydrates</span>
+                            </div>
+                            <button class="favorites-toggle {{ meal.uniqueMealId in favoriteMealsIds ? 'remove-from-favorites' : 'add-to-favorites' }}"
+                                    data-meal-type="{{ mealType }}"
+                                    data-meal-id="{{ meal.uniqueMealId }}">
+                            </button>
+                        </div>
+                    </div>
                 {% endfor %}
-            </tr>
-            <tr>
-                {% for mealDay in mealPlans|keys %}
-                    <td>
-                        {% if mealPlans[mealDay][0][mealType] is defined %}
-                            {% set meal = mealPlans[mealDay][0][mealType] %}
-                            <div>{{ meal.name }}</div>
-                            <div>{{ meal.calories }} kcal</div>
-                            <div>{{ meal.protein }} protein</div>
-                            <div>{{ meal.carbohydrates }} carbohydrates</div>
-                        {% else %}
-                            <div>---</div>
-                        {% endif %}
-                    </td>
-                {% endfor %}
-            </tr>
+            </div>
         {% endfor %}
-        </tbody>
-    </table>
-
-    <div>
-        <a href="{{ path('app_profile_diet') }}">Generate new plan</a>
-        <a href="{{ path('app_profile_diet_list') }}">Shopping list</a>
+        <div class="meal-plan-links">
+            <a href="{{ path('app_profile_diet') }}" class="generate-plan-link">Generate new plan</a>
+            <a href="{{ path('app_profile_diet_list') }}">Shopping list</a>
+        </div>
     </div>
+    {% block javascripts %}
+        {{ parent() }}
+    {% endblock %}
 {% endblock %}

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use Doctrine\DBAL\Types\FloatType;
 use Doctrine\DBAL\Types\StringType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MealRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -24,7 +26,7 @@ class Meals
     private ?string $breakfast = null;
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
-    private ?string $secondBreakfast = null;
+    private ?string $brunch = null;
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?string $lunch = null;
@@ -34,6 +36,14 @@ class Meals
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?string $dinner = null;
+
+    #[ORM\OneToMany(mappedBy: 'meal_id', targetEntity: FavouriteMeal::class)]
+    private Collection $favouriteMeals;
+
+    public function __construct()
+    {
+        $this->favouriteMeals = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -87,17 +97,17 @@ class Meals
     /**
      * @return string|null
      */
-    public function getSecondBreakfast(): ?string
+    public function getBrunch(): ?string
     {
-        return $this->secondBreakfast;
+        return $this->brunch;
     }
 
     /**
-     * @param string|null $secondBreakfast
+     * @param string|null $brunch
      */
-    public function setSecondBreakfast(?string $secondBreakfast): void
+    public function setBrunch(?string $brunch): void
     {
-        $this->secondBreakfast = $secondBreakfast;
+        $this->brunch = $brunch;
     }
 
     /**
@@ -146,6 +156,35 @@ class Meals
     public function setDinner(?string $dinner): void
     {
         $this->dinner = $dinner;
+    }
+
+    /**
+     * @return Collection<int, FavouriteMeal>
+     */
+    public function getFavouriteMeals(): Collection
+    {
+        return $this->favouriteMeals;
+    }
+
+    public function addFavouriteMeal(FavouriteMeal $favouriteMeal): static
+    {
+        if (!$this->favouriteMeals->contains($favouriteMeal)) {
+            $this->favouriteMeals->add($favouriteMeal);
+            $favouriteMeal->setMealId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavouriteMeal(FavouriteMeal $favouriteMeal): static
+    {
+        if ($this->favouriteMeals->removeElement($favouriteMeal)) {
+            if ($favouriteMeal->getMealId() === $this) {
+                $favouriteMeal->setMealId(null);
+            }
+        }
+
+        return $this;
     }
 
 }

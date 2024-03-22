@@ -6,13 +6,10 @@ use App\Entity\Meals;
 use App\Entity\MealPlan;
 use App\Entity\Profile;
 use App\Entity\ShoppingList;
-use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
-use OpenAI;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class DietProvider
 {
@@ -26,7 +23,7 @@ class DietProvider
         $this->client = new Client();
     }
 
-    public function makePlan(string $prompt, Profile $profile): ?string
+    public function makePlan(string $prompt): ?string
     {
         $apiKey = $this->parameterBag->get('gpt_secret_key');
         $response = $this->client->post('https://api.openai.com/v1/completions', [
@@ -58,6 +55,7 @@ class DietProvider
         $jsonResponse = str_replace("'", '"', $jsonResponse);
         $jsonResponse = trim($jsonResponse);
         $dietData = json_decode($jsonResponse, true);
+        $profile = $this->entityManager->getRepository(Profile::class)->findByUserId($user->getId());
 
         $weekId = time();
         $mealPlan = new MealPlan();
@@ -67,20 +65,21 @@ class DietProvider
         $shoppingList = new ShoppingList();
         $shoppingList->setShoppingList(implode("\n", $dietData['shopping_list']));
         $mealPlan->setShopList($shoppingList);
+        $profile->setCaloricdemand($dietData['caloric_demand']);
         $this->entityManager->persist($mealPlan);
         $this->entityManager->persist($shoppingList);
 
         foreach ($dietData as $dayName => $dayMeals) {
-            if ($dayName === 'shopping_list') {
+            if ($dayName === 'shopping_list' || $dayName == 'caloric_demand') {
                 continue;
             }
 
             $meal = new Meals();
             $meal->setMealPlan($mealPlan);
-            $meal->setDayOfWeek($dayName);
+            $meal->setDayOfWeek(strtolower($dayName));
 
             $meal->setBreakfast(json_encode($dayMeals['breakfast'] ?? null));
-            $meal->setSecondBreakfast(json_encode($dayMeals['second_breakfast'] ?? null));
+            $meal->setBrunch(json_encode($dayMeals['brunch'] ?? null));
             $meal->setLunch(json_encode($dayMeals['lunch'] ?? null));
             $meal->setSnack(json_encode($dayMeals['snack'] ?? null));
             $meal->setDinner(json_encode($dayMeals['dinner'] ?? null));
@@ -92,9 +91,12 @@ class DietProvider
     }
 
 
-    public function getShoppingList(): array
+    public function getShoppingList(): string
     {
-        return $this->entityManager->getRepository(Meals::class)->findShoppingList();
+        $shoppingList = $this->entityManager->getRepository(Meals::class)->findShoppingList();
+        $items = explode("\n", $shoppingList[0]['shopping_list']);
+
+        return implode("\r\n", $items);
     }
 
 }

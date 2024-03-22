@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Favourites{% endblock %}
+
+{% block body %}
+    <div class="sidebar">
+        <a href="{{ path('app_profile') }}">Profile</a>
+        <a href="{{ path('app_user', {'id': app.user.id}) }}">Settings</a>
+        <a href="{{ path('app_favourites') }}">Favourites</a>
+    </div>
+    <div class="meal-plan-container">
+        <h1>Favourites</h1>
+        {% for mealType, favourites in groupedFavourites %}
+            <section class="meal-plan-day">
+                <h2 class="meal-plan-day-title">{{ mealType|capitalize }}</h2>
+                <div>
+                    {% for item in favourites %}
+                        <div class="meal-plan-day">
+                            <strong>{{ item.mealDetails.name }}</strong>
+                            {{ item.mealDetails.calories }} kcal,
+                            {{ item.mealDetails.carbohydrates }} carbs,
+                            {{ item.mealDetails.protein }} protein,
+                            at {{ item.mealDetails.time }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endfor %}
+    </div>
+{% endblock %}

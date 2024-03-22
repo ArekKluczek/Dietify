@@ -39,7 +39,7 @@ class Profile
     private ?string $allergies = null;
 
     #[ORM\Column(nullable: true)]
-    private ?float $calorieresrequirement = null;
+    private ?float $caloricdemand = null;
 
     public function getId(): ?int
     {
@@ -99,7 +99,7 @@ class Profile
         return $this->gender;
     }
 
-    public function setGender(bool $gender): static
+    public function setGender(string $gender): static
     {
         $this->gender = $gender;
 
@@ -142,15 +142,19 @@ class Profile
         return $this;
     }
 
-    public function getCalorieresrequirement(): ?float
+    /**
+     * @return float|null
+     */
+    public function getCaloricdemand(): ?float
     {
-        return $this->calorieresrequirement;
+        return $this->caloricdemand;
     }
 
-    public function setCalorieresrequirement(?float $calorieresrequirement): static
+    /**
+     * @param float|null $caloricdemand
+     */
+    public function setCaloricdemand(?float $caloricdemand): void
     {
-        $this->calorieresrequirement = $calorieresrequirement;
-
-        return $this;
+        $this->caloricdemand = $caloricdemand;
     }
 }

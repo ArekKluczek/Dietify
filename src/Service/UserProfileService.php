@@ -6,7 +6,7 @@ use App\Entity\Profile;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class BMICalculatorService
+class UserProfileService
 {
 
     protected EntityManagerInterface $entityManager;
@@ -18,15 +18,19 @@ class BMICalculatorService
         $this->security = $security;
     }
 
-    public function calculateBMI(Profile $profile): ?string
+    public function calculateBMI(Profile $profile): ?array
     {
         $user = $this->security->getUser();
 
         if ($user) {
             $height = $profile->getHeight() / 100;
             $weight = $profile->getWeight();
-            $bmi = $weight / ($height ** 2);
-            return $this->printBMI($bmi);
+            $bmiValue = $weight / ($height ** 2);
+            $category = $this->printBMI($bmiValue);
+            return [
+                'value' => $bmiValue,
+                'category' => $category
+            ];
         }
 
         return null;
@@ -43,6 +47,18 @@ class BMICalculatorService
             $bmi >= 35 && $bmi < 40 => 'Obese Class II (Severely obese)',
             default => 'Obese Class III (Very severely obese)',
         };
+    }
+
+    public function getDietPromptData($profile): array {
+        return [
+            'height' => $profile->getHeight(),
+            'weight' => $profile->getWeight(),
+            'age' => $profile->getAge(),
+            'gender' => $profile->getGender(),
+            'dietPreferences' => $profile->getDietpreferences(),
+            'allergies' => $profile->getAllergies(),
+            'activity' => $profile->getActivityLevel(),
+        ];
     }
 
 }

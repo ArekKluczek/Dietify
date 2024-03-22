@@ -32,15 +32,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column]
+    private ?string $secondPassword = null;
+
     #[ORM\OneToMany(mappedBy: 'userid', targetEntity: MealPlan::class, cascade: ['persist', 'remove'])]
     private Collection $mealPlans;
 
     #[ORM\OneToOne(mappedBy: 'userid', targetEntity: Profile::class, cascade: ['persist', 'remove'])]
     private ?Profile $profile = null;
 
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: FavouriteMeal::class)]
+    private Collection $favouriteMeals;
+
     #[Pure]
     public function __construct() {
         $this->mealPlans = new ArrayCollection();
+        $this->favouriteMeals = new ArrayCollection();
     }
 
     public function getDiets(): Collection {
@@ -109,6 +119,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getSecondPassword(): string
+    {
+        return $this->secondPassword;
+    }
+
+    public function setSecondPassword(string $secondPassword): static
+    {
+        $this->secondPassword = $secondPassword;
+
+        return $this;
+    }
+
+    /**
      * @see UserInterface
      */
     public function eraseCredentials(): void
@@ -117,24 +142,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getDiet(): ?Diet
+    /**
+     * @return Collection<int, FavouriteMeal>
+     */
+    public function getFavouriteMeals(): Collection
     {
-        return $this->diet;
+        return $this->favouriteMeals;
     }
 
-    public function setDiet(?Diet $diet): static
+    public function addFavouriteMeal(FavouriteMeal $favouriteMeal): static
     {
-        // unset the owning side of the relation if necessary
-        if ($diet === null && $this->diet !== null) {
-            $this->diet->setUserid(null);
+        if (!$this->favouriteMeals->contains($favouriteMeal)) {
+            $this->favouriteMeals->add($favouriteMeal);
+            $favouriteMeal->setUserId($this);
         }
 
-        // set the owning side of the relation if necessary
-        if ($diet !== null && $diet->getUserid() !== $this) {
-            $diet->setUserid($this);
-        }
+        return $this;
+    }
 
-        $this->diet = $diet;
+    public function removeFavouriteMeal(FavouriteMeal $favouriteMeal): static
+    {
+        if ($this->favouriteMeals->removeElement($favouriteMeal)) {
+            // set the owning side to null (unless already changed)
+            if ($favouriteMeal->getUserId() === $this) {
+                $favouriteMeal->setUserId(null);
+            }
+        }
 
         return $this;
     }

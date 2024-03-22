@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block body %}
+    <div class="sidebar">
+        <a href="{{ path('app_profile') }}">Profile</a>
+        <a href="{{ path('app_user', {'id': app.user.id}) }}">Settings</a>
+        <a href="{{ path('app_favourites') }}">Favourites</a>
+    </div>
+        {{ include('user/_form.html.twig', {'button_label': 'Update'}, {'class': 'form-signin'}) }}
+{% endblock %}

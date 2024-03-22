@@ -28,6 +28,13 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            $user->setSecondPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword2')->getData()
+                )
+            );
+
             $entityManager->persist($user);
             $entityManager->flush();
 

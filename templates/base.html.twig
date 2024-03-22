@@ -1,25 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="{{ asset('images/Dietifyy.png') }}">
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-            <link rel="stylesheet" href="{{ asset('styles/app.scss') }}">
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Dietify{% endblock %}</title>
+    <link rel="icon" href="{{ asset('build//images/DietifyLogo.png') }}">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+</head>
+{% include 'header/header.html.twig' %}
 
-
-    </head>
-    <body>
-    <button class="btn btn-primary">test</button>
-        {% include 'header/header.html.twig' %}
-        {% block body %}
-
-            {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-    
-            {% endblock %}
-        {% endblock %}
-    </body>
+{% block body %}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+{% endblock %}
+<div id="throbber" class="throbber-container" style="display: none;">
+    <div class="spinner"></div>
+</div>
+{% include 'footer/footer.html.twig' %}
 </html>

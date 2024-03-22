@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BMI Calculation{% endblock %}
+
+{% block body %}
+<div class="bmi-container">
+    <h1>Your BMI: {{ bmiValue|number_format(2) }} - {{ bmiCategory }}</h1>
+    <p>
+        BMI, or Body Mass Index, is a measure that uses your height and weight to work out if your weight is in a healthy range.
+        It's a useful tool to identify whether you are underweight, normal weight, overweight, or obese.
+        The calculation divides an adult's weight in kilograms by their height in meters squared.
+        For most adults, an ideal BMI is in the range of 18.5 to 24.9.
+    </p>
+    <p>
+        In your Dietify profile, your BMI is automatically calculated based on the height and weight you have entered.
+        Whenever you update your profile with new measurements, your BMI will reflect these changes accordingly.
+    </p>
+    <p>Here are the BMI categories as used in Dietify:</p>
+    <ul>
+        <li>Less than 16: Severely underweight</li>
+        <li>16 to 18.5: Underweight</li>
+        <li>18.5 to 25: Normal (healthy weight)</li>
+        <li>25 to 30: Overweight</li>
+        <li>30 to 35: Obese Class I (Moderately obese)</li>
+        <li>35 to 40: Obese Class II (Severely obese)</li>
+        <li>More than 40: Obese Class III (Very severely obese)</li>
+    </ul>
+    <p>It's important to note that BMI is a simple and useful indicator of a healthy body weight, but it doesn't measure body fat directly and can sometimes be misleading, especially in muscular individuals or those with a health condition that affects body weight. Always consult a healthcare provider for the
+        most comprehensive assessment of your health.</p>
+</div>
+{% endblock %}
