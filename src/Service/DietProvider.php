@@ -2,12 +2,15 @@
 
 namespace App\Service;
 
+use App\Entity\FavouriteMeal;
 use App\Entity\Meals;
 use App\Entity\MealPlan;
 use App\Entity\Profile;
 use App\Entity\ShoppingList;
+use App\Repository\MealRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -16,10 +19,12 @@ class DietProvider
     private ParameterBagInterface $parameterBag;
     private EntityManagerInterface $entityManager;
     private Client $client;
-    public function __construct(ParameterBagInterface $parameterBag, EntityManagerInterface $entityManager)
+    private Security $security;
+    public function __construct(ParameterBagInterface $parameterBag, EntityManagerInterface $entityManager, Security $security)
     {
         $this->parameterBag = $parameterBag;
         $this->entityManager = $entityManager;
+        $this->security = $security;
         $this->client = new Client();
     }
 
@@ -99,4 +104,45 @@ class DietProvider
         return implode("\r\n", $items);
     }
 
+    public function canUserGeneratePlanThisWeek(UserInterface $user): bool {
+        $weekTimestamps = $this->getStartAndEndOfWeek();
+        $qb = $this->entityManager->getRepository(MealPlan::class)->createQueryBuilder('mp');
+
+        $qb->where('mp.userid = :user')
+            ->andWhere('mp.weekId >= :startOfWeek')
+            ->andWhere('mp.weekId <= :endOfWeek')
+            ->setParameter('user', $user)
+            ->setParameter('startOfWeek', $weekTimestamps['start'])
+            ->setParameter('endOfWeek', $weekTimestamps['end']);
+
+        $existingPlan = $qb->getQuery()->getResult();
+
+        return count($existingPlan) === 0;
+    }
+
+    private function getStartAndEndOfWeek(): array {
+        $today = new \DateTime();
+        $startOfWeek = clone $today;
+        $endOfWeek = clone $today;
+
+        $startOfWeek->modify('this week')->setTime(0, 0, 0);
+
+        $endOfWeek->modify('this week +6 days')->setTime(23, 59, 59);
+
+        return [
+            'start' => $startOfWeek->getTimestamp(),
+            'end' => $endOfWeek->getTimestamp(),
+        ];
+    }
+
+    public function organizeMealData($meal, $mealId): array
+    {
+        return [
+            'breakfast' => array_merge(json_decode($meal->getBreakfast(), true), ['uniqueMealId' => $mealId . '-breakfast']),
+            'brunch' => array_merge(json_decode($meal->getBrunch(), true), ['uniqueMealId' => $mealId . '-brunch']),
+            'lunch' => array_merge(json_decode($meal->getLunch(), true), ['uniqueMealId' => $mealId . '-lunch']),
+            'snack' => array_merge(json_decode($meal->getSnack(), true), ['uniqueMealId' => $mealId . '-snack']),
+            'dinner' => array_merge(json_decode($meal->getDinner(), true), ['uniqueMealId' => $mealId . '-dinner']),
+        ];
+    }
 }

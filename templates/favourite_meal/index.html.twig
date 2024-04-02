@@ -8,23 +8,29 @@
         <a href="{{ path('app_user', {'id': app.user.id}) }}">Settings</a>
         <a href="{{ path('app_favourites') }}">Favourites</a>
     </div>
-    <div class="meal-plan-container">
-        <h1>Favourites</h1>
+    <div class="meal-plan__container">
         {% for mealType, favourites in groupedFavourites %}
-            <section class="meal-plan-day">
-                <h2 class="meal-plan-day-title">{{ mealType|capitalize }}</h2>
-                <div>
+            <section class="meal-plan__day favourites">
+                <h2 class="meal-plan__day-title favourites__day-title">{{ mealType|capitalize }}</h2>
+                <div class="meal-plan__meal favourites__meal">
                     {% for item in favourites %}
-                        <div class="meal-plan-day">
-                            <strong>{{ item.mealDetails.name }}</strong>
-                            {{ item.mealDetails.calories }} kcal,
-                            {{ item.mealDetails.carbohydrates }} carbs,
-                            {{ item.mealDetails.protein }} protein,
-                            at {{ item.mealDetails.time }}
+                        <div class="meal-plan__meal-details favourites__meal-details">
+                            <div class="meal-plan__meal-name favourites__meal-name">{{ item.mealDetails.name }}</div>
+                            <div class="meal-plan__meal-info">
+                                <span class="meal-plan__meal-calories"><span
+                                            class="color-green">{{ item.mealDetails.calories }}</span> kcal</span>
+                                <span class="meal-plan__meal-protein"><span
+                                            class="color-green">{{ item.mealDetails.protein }}</span> protein</span>
+                                <span class="meal-plan__meal-carbs"><span
+                                            class="color-green">{{ item.mealDetails.carbohydrates }}</span> carbohydrates</span>
+                            </div>
                         </div>
                     {% endfor %}
                 </div>
             </section>
         {% endfor %}
     </div>
+    {% block javascripts %}
+        {{ parent() }}
+    {% endblock %}
 {% endblock %}

@@ -7,18 +7,19 @@
         <a href="{{ path('app_favourites') }}">Favourites</a>
     </div>
 
-    <div class="main-content-with-sidebar">
+    <div class="profile-form">
         {{ form_start(profileForm, {'attr': {'class': 'profile-form'}}) }}
-        <div class="profile-form-row">
-            {{ form_row(profileForm.weight, {'attr': {'class': 'form-control'}}) }}
-            {{ form_row(profileForm.height, {'attr': {'class': 'form-control'}}) }}
-            {{ form_row(profileForm.age, {'attr': {'class': 'form-control'}}) }}
-            {{ form_row(profileForm.gender, {'attr': {'class': 'form-control'}}) }}
-            {{ form_row(profileForm.activitylevel, {'attr': {'class': 'form-control'}}) }}
-            {{ form_row(profileForm.dietpreferences, {'attr': {'class': 'form-control'}}) }}
-            {{ form_row(profileForm.allergies, {'attr': {'class': 'form-control'}}) }}
+        <div class="profile-form__items">
+            {{ form_row(profileForm.weight, {'attr': {'class': 'profile-form__item'}}) }}
+            {{ form_row(profileForm.height, {'attr': {'class': 'profile-form__item'}}) }}
+            {{ form_row(profileForm.age, {'attr': {'class': 'profile-form__item'}}) }}
+            {{ form_row(profileForm.gender, {'attr': {'class': 'profile-form__item'}}) }}
+            {{ form_row(profileForm.activitylevel, {'attr': {'class': 'profile-form__item'}}) }}
+            {{ form_row(profileForm.dietpreferences, {'attr': {'class': 'profile-form__item'}}) }}
+            {{ form_row(profileForm.allergies, {'attr': {'class': 'profile-form__item'}}) }}
+            <button type="submit" class="profile-form__button">save</button>
         </div>
-        <button type="submit" class="btn">save</button>
         {{ form_end(profileForm) }}
     </div>
+    <div class="elipse-left"></div>
 {% endblock %}

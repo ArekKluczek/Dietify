@@ -4,62 +4,65 @@
     <main class="main">
         <div class="dashboard-section">
             <div class="about">
-                <div class="about-text">
-                    <h1>Welcome to Dietify</h1>
-                    <p>Welcome to a new era of tailored nutrition where "healthy eating is exciting"! Our mission is to
-                        empower your journey towards achieving your health, weight, and fitness aspirations with food
-                        that nourishes and delights. Whether you're looking to shed a few pounds, optimize your
-                        wellbeing, or fuel your fitness routine, our personalized diet plans are crafted just for you.
-                        At Dietify, we combine the science of nutrition with the art of delicious cooking to create a
-                        menu that fits into your lifestyle and satisfies your taste buds.</p>
-                    <p>Explore our diverse range of diet plans, thoughtfully designed to suit your unique health
-                        conditions, dietary preferences, and goals. With us, nutrition is never one-size-fits-all. Let's
-                        make every meal a step towards wellness, without ever compromising on flavor. Start your
-                        personalized nutrition journey with Dietify today and transform the way you think about
-                        food!</p>
-                    <a href="{{ path('app_profile_diet_show') }}" class="btn btn-view-plans">View Plans</a>
-                    <a href="{{ path('app_dashboard_how_it_works') }}" class="btn btn-learn-more">Learn More</a>
+                <div class="about__welcome">Welcome to Dietify!</div>
+                <div class="about__text">
+                    <p>Are you looking to transform your health and well-being through tailored nutrition? Look no
+                        further!
+                        Our platform is dedicated to crafting personalized diets designed specifically for you.
+                        We understand that each individual has unique dietary needs, goals, and preferences,
+                        and we're here to help you navigate your nutritional journey with precision and care.</p>
+                </div>
+                <div class="about__buttons">
+                    <a href="{{ path('app_profile_diet_show') }}" class="btn-view-plans">VIEW PLANS</a>
                 </div>
             </div>
             {% if app.user and meals is not empty %}
-            <div class="meals-section">
-                <h2>Meals today</h2>
-                {% for meal_time, meal_array in meals %}
-                    {% for meal_details in meal_array %}
-                        <div class="meal">
-                            <p><strong>Name:</strong> {{ meal_details['name'] }}</p>
-                            <p><strong>Calories:</strong> {{ meal_details['calories'] }}</p>
-                            <p><strong>Carbohydrates:</strong> {{ meal_details['carbohydrates'] }}g</p>
-                            <p><strong>Protein:</strong> {{ meal_details['protein'] }}g</p>
-                            <p><strong>Time:</strong> {{ meal_details['time'] }}</p>
-                        </div>
+                <h1 class="meals-today">Meals today</h1>
+                <div class="meal-container">
+                    {% for meal_time, meal_array in meals %}
+                        {% for meal_type, meal_details in meal_array %}
+                            <div class="meal">
+                                <div class="meal__type-container">
+                                    <div class="meal__type">{{ meal_type|capitalize }}</div>
+                                    <div class="meal__preparation-time">{{ meal_details['preparation_time'] }}m</div>
+                                </div>
+                                <div class="meal__details">
+                                    <p> {{ meal_details['name'] }}</p>
+                                    <div class="meal__macros">
+                                        <p>KCAL: <span class="color-green">{{ meal_details['calories'] }}</span></p>
+                                        <p>C: <span class="color-green">{{ meal_details['carbohydrates'] }}g</span></p>
+                                        <p>P: <span class="color-green">{{ meal_details['protein'] }}g</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
-            </div>
+                </div>
             {% else %}
                 <div class="unlogged-section">
-                    <h2>Discover Healthy Eating</h2>
-                    <p>Curious about how Dietify can transform your meals into a journey of wellness? Take a peek at some of our most popular diet plans and the science behind them.</p>
-                    <a href="{{ path('app_profile_diet') }}" class="btn btn-sign-up generate-plan-link">Get Your Plan</a>
-                    <a href="{{ path('app_dashboard_how_it_works') }}" class="btn btn-learn-more">How It Works</a>
-                    <div class="sample-meals">
-                        <h3>Sample Meals</h3>
+                    <h2>Sample Meals</h2>
+                    <div class="meal-container">
                         <div class="meal">
-                            <h4>Breakfast</h4>
-                            <p>Avocado Toast with Poached Eggs</p>
+                            <div class="meal__name">Breakfast</div>
+                            <p class="meal__food">Avocado Toast with Poached Eggs</p>
                         </div>
                         <div class="meal">
-                            <h4>Lunch</h4>
-                            <p>Quinoa Salad Bowl with Grilled Chicken</p>
+                            <div class="meal__name">Lunch</div>
+                            <p class="meal__food">Quinoa Salad Bowl with Grilled Chicken</p>
                         </div>
                         <div class="meal">
-                            <h4>Snack</h4>
-                            <p>Apple with Almond Butter</p>
+                            <div class="meal__name">Snack</div>
+                            <p class="meal__food">Apple with Almond Butter</p>
                         </div>
                         <div class="meal">
-                            <h4>Dinner</h4>
-                            <p>Salmon with Steamed Broccoli and Quinoa</p>
+                            <div class="meal__name">Dinner</div>
+                            <p class="meal__food">Salmon with Steamed Broccoli and Quinoa</p>
                         </div>
+                    </div>
+                    <div class="unlogged-section__buttons">
+                        <a href="{{ path('app_profile_diet') }}" class="btn-get-your-plan generate-plan-link">Get Your
+                            Plan</a>
+                        <a href="{{ path('app_dashboard_how_it_works') }}" class="btn-how-it-works">How It Works</a>
                     </div>
                 </div>
             {% endif %}

@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BMI Calculation{% endblock %}
+
+{% block body %}
+    <div class="info-container">
+        <h2>You can generate meal plan once a week!</h2>
+        <div class="info">
+            <p><span class="color-green">At Dietify</span>, we understand the excitement and eagerness to dive into a healthier lifestyle,
+                and it's our mission to guide you through a sustainable journey to achieve your dietary and fitness
+                goals.
+                We have carefully designed our service to allow you to generate your personalized meal plan once a week
+                for several reasons.
+            </p>
+            <span class="color-green">First and foremost</span>, consistent adherence is key to a successful diet plan. When you receive a meal plan,
+            it's designed to be followed for a full week. This duration is strategically set to enable your body to
+            adapt to the new nutrients and portions sizes. It's important for your metabolism to have a consistent
+            rhythm, and frequent changes to your diet can disrupt this, leading to less than optimal results.
+            <p>
+                <span class="color-green">Additionally</span>, a week-long plan encourages habit formation.
+                It takes time to develop new eating habits, and having a plan that changes daily could hinder this
+                process.
+                By following a weekly plan, you allow yourself the time to adjust to new foods, preparation methods, and
+                meal timings,
+                which is vital for long-term adherence and success.
+            </p>
+            <p>
+                <span class="color-green">Finally</span>, we aim to prevent information overload. Receiving too much information at once can be
+                overwhelming and may lead to decision fatigue.
+                By limiting plan generation to once a week, we help you focus on the current plan without worrying about
+                the next one too soon.
+            </p>
+            <p>
+                <span class="color-green">In conclusion</span>, our once-a-week policy at Dietify is rooted in a commitment to your health and success.
+                It is a mindful approach designed to optimize your nutrition, encourage sustainable habits, ensure
+                variety, streamline your routine,
+                and allow for personal growth and reflection. As always, we are dedicated to supporting you every step
+                of the way on your health journey.
+            </p>
+        </div>
+    </div>
+    {% block javascripts %}
+        {{ parent() }}
+    {% endblock %}
+{% endblock %}

@@ -17,7 +17,11 @@
             label: 'Repeat Password'
         }) }}
 
-        <button type="submit" class="btn btn-lg btn-primary">Register</button>
+        <button type="submit">REGISTER</button>
     </div>
     {{ form_end(registrationForm) }}
+    <div class="elipse-left"></div>
+    {% block javascripts %}
+        {{ parent() }}
+    {% endblock %}
 {% endblock %}

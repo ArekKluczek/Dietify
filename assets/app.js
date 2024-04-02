@@ -1,6 +1,6 @@
 const $ = require('jquery');
 require('bootstrap');
-import './styles/app.css';
+import './styles/app.scss';
 
 function addToFavoritesHandler(event) {
     const button = event.currentTarget;
@@ -60,8 +60,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    var generatePlanLink = document.querySelector('.generate-plan-link');
-    var throbber = document.getElementById('throbber');
+    let generatePlanLink = document.querySelector('.generate-plan-link');
+    let throbber = document.getElementById('throbber');
 
     if (generatePlanLink && throbber) {
         generatePlanLink.addEventListener('click', function(e) {
@@ -72,4 +72,27 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 500);
         });
     }
+});
+
+function toggleStepDescription(event) {
+    let stepContainer = event.currentTarget;
+    let text = stepContainer.querySelector('.step-text');
+
+    text.classList.toggle('hidden');
+    stepContainer.classList.toggle('expanded');
+    stepContainer.classList.toggle('step-expanded');
+}
+
+document.querySelectorAll('.step').forEach(function(step) {
+    step.addEventListener('click', toggleStepDescription);
+});
+
+document.getElementById('hamburger').addEventListener('click', function() {
+    let navMenu = document.getElementById('nav-menu');
+    let isOpen = navMenu.classList.contains('active');
+
+    this.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+
+    navMenu.classList.toggle('active');
+    this.classList.toggle('active');
 });

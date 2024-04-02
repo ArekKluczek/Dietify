@@ -97,17 +97,19 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('app_profile');
         }
 
+        $jsonResponse = null;
         $prompt = $this->renderView('diet/diet_prompt.html.twig', $this->profileService->getDietPromptData($profile));
 
-        $jsonResponse = $this->dietProvider->makePlan($prompt);
+        if ($this->dietProvider->canUserGeneratePlanThisWeek($user)) {
+            $jsonResponse = $this->dietProvider->makePlan($prompt);
+        }
 
         if ($jsonResponse) {
             $this->dietProvider->makeDiet($jsonResponse, $user);
             return $this->redirectToRoute('app_profile_diet_show');
         }
 
-        $this->addFlash('error', 'Error, unable to create new plan.');
-        return $this->redirectToRoute('app_profile');
+        return $this->redirectToRoute('app_profile_info');
     }
 
     #[Route('/profile/diet/show', name: 'app_profile_diet_show', methods: ['GET'])]
@@ -129,13 +131,7 @@ class ProfileController extends AbstractController
             $day = $meal->getDayOfWeek();
             $mealId = $meal->getId();
 
-            $organizedMeals[$day][] = [
-                'breakfast' => array_merge(json_decode($meal->getBreakfast(), true), ['uniqueMealId' => $mealId . '-breakfast']),
-                'brunch' => array_merge(json_decode($meal->getBrunch(), true), ['uniqueMealId' => $mealId . '-brunch']),
-                'lunch' => array_merge(json_decode($meal->getLunch(), true), ['uniqueMealId' => $mealId . '-lunch']),
-                'snack' => array_merge(json_decode($meal->getSnack(), true), ['uniqueMealId' => $mealId . '-snack']),
-                'dinner' => array_merge(json_decode($meal->getDinner(), true), ['uniqueMealId' => $mealId . '-dinner']),
-            ];
+            $organizedMeals[$day][] = $this->dietProvider->organizeMealData($meal, $mealId);
         }
 
         $favoriteMeals = $this->entityManager->getRepository(FavouriteMeal::class)->findBy(['user' => $this->getUser()]);
@@ -165,5 +161,9 @@ class ProfileController extends AbstractController
 
     }
 
-
+    #[Route('/profile/info', name: 'app_profile_info')]
+    public function howItWorks(): Response
+    {
+        return $this->render('profile/info.html.twig', );
+    }
 }
