@@ -1,0 +1,50 @@
+{% block header %}
+    <header class="header">
+        <div class="header__logo-container">
+            <a href="{{ path('app_dashboard') }}"><img src="{{ asset('build//images/Dietify-logo.png') }}"
+                                                       alt="Dietify logo"
+                                                       class="header__dietify-logo"></a>
+        </div>
+        <div class="header__cases">
+            <a href="{{ path('app_dashboard_how_it_works') }}" class="menu">HOW IT WORKS</a>
+            <a href="{{ path('app_profile_bmi') }}" class="menu">BMI</a>
+            <a href="{{ path('app_profile_diet_show') }}" class="menu">MEALPLAN</a>
+            <a href="{{ path('app_profile') }}" class="menu">PROFILE</a>
+        </div>
+        {% if app.user %}
+            <div class="header__login-container">
+                <a href="{{ path('app_logout') }}" class="btn">LOG OUT</a>
+            </div>
+        {% else %}
+            <div class="header__login-container">
+                <a href="{{ path('app_login') }}" class="login-button">LOGIN</a>
+                <a href="{{ path('app_register') }}" class="signup-button">SIGN UP</a>
+            </div>
+        {% endif %}
+
+        <div class="hamburger-menu">
+            <button id="hamburger" aria-label="Otwórz menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <nav id="nav-menu" class="nav-menu">
+            <div class="nav-menu__item"><a href="{{ path('app_dashboard_how_it_works') }}" class="menu">HOW IT WORKS</a>
+            </div>
+            <div class="nav-menu__item"><a href="{{ path('app_profile_bmi') }}" class="menu">BMI</a></div>
+            <div class="nav-menu__item"><a href="{{ path('app_profile_diet_show') }}" class="menu">MEALPLAN</a></div>
+            <div class="nav-menu__item"><a href="{{ path('app_profile') }}" class="menu">PROFILE</a></div>
+            {% if app.user %}
+                <div class="logout__buttons-mobile">
+                    <a href="{{ path('app_logout') }}" class="btn">LOG OUT</a>
+                </div>
+            {% else %}
+                <div class="login__buttons-mobile">
+                    <a href="{{ path('app_login') }}" class="login-button">LOGIN</a>
+                    <a href="{{ path('app_register') }}" class="signup-button">SIGN UP</a>
+                </div>
+            {% endif %}
+        </nav>
+    </header>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="meal-plan__container">
+        {% for mealDay, mealsOfDay in mealPlans %}
+            <div class="meal-plan__day">
+                <div class="meal-plan__day-title">
+                    <h2>{{ mealDay|capitalize }}</h2>
+                </div>
+                {% for mealType, meal in mealsOfDay[0] %}
+                    <div class="meal-plan__meal">
+                        <div class="meal-plan__meal-time">{{ mealType|capitalize }} {{ meal.time }}</div>
+                        <div class="meal-plan__meal-details">
+                            <div class="meal-plan__meal-name">{{ meal.name }}</div>
+                            <div class="meal-plan__meal-info">
+                                <span class="meal-plan__meal-calories"><span class="color-green">{{ meal.calories }}</span> kcal</span>
+                                <span class="meal-plan__meal-protein"><span class="color-green">{{ meal.protein }}</span> protein</span>
+                                <span class="meal-plan__meal-carbs"><span class="color-green">{{ meal.carbohydrates }}</span> carbohydrates</span>
+                            </div>
+                            <button class="favorites-toggle {{ meal.uniqueMealId in favoriteMealsIds ? 'remove-from-favorites' : 'add-to-favorites' }}"
+                                    data-meal-type="{{ mealType }}"
+                                    data-meal-id="{{ meal.uniqueMealId }}">
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <div class="meal-plan__links">
+            <a href="{{ path('app_profile_diet') }}" class="btn-view-plans generate-plan-link">Generate new plan</a>
+            <a href="{{ path('app_profile_diet_list') }}"class="shopping-button">Shopping list</a>
+        </div>
+    </div>
+    {% block javascripts %}
+        {{ parent() }}
+    {% endblock %}
+{% endblock %}

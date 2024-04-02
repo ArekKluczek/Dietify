@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="sidebar">
+        <a href="{{ path('app_profile') }}">Profile</a>
+        <a href="{{ path('app_user', {'id': app.user.id}) }}">Settings</a>
+        <a href="{{ path('app_favourites') }}">Favourites</a>
+    </div>
+
+    <div class="profile-form">
+        {{ form_start(profileForm, {'attr': {'class': 'profile-form'}}) }}
+        <div class="profile-form__items">
+            {{ form_row(profileForm.weight, {'attr': {'class': 'profile-form__item'}}) }}
+            {{ form_row(profileForm.height, {'attr': {'class': 'profile-form__item'}}) }}
+            {{ form_row(profileForm.age, {'attr': {'class': 'profile-form__item'}}) }}
+            {{ form_row(profileForm.gender, {'attr': {'class': 'profile-form__item'}}) }}
+            {{ form_row(profileForm.activitylevel, {'attr': {'class': 'profile-form__item'}}) }}
+            {{ form_row(profileForm.dietpreferences, {'attr': {'class': 'profile-form__item'}}) }}
+            {{ form_row(profileForm.allergies, {'attr': {'class': 'profile-form__item'}}) }}
+            <button type="submit" class="profile-form__button">save</button>
+        </div>
+        {{ form_end(profileForm) }}
+    </div>
+    <div class="elipse-left"></div>
+{% endblock %}
