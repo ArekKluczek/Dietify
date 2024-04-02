@@ -21,11 +21,21 @@ class ProfileRepository extends ServiceEntityRepository
         parent::__construct($registry, Profile::class);
     }
 
-    public function findByUserId($value): ?Profile
+
+    /**
+     *  Looking for a profile by user id.
+     *
+     * @param $userId
+     *  User id.
+     *
+     * @return Profile|null
+     *  Returns profile of user.
+     */
+    public function findByUserId($userId): ?Profile
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.userid = :val')
-            ->setParameter('val', $value)
+            ->setParameter('val', $userId)
             ->getQuery()
             ->getOneOrNullResult();
     }

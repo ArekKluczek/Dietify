@@ -44,6 +44,11 @@ class MealRepository extends ServiceEntityRepository
             ->getResult() ?? NULL;
     }
 
+    /**
+     *  Returns meals for latest week.
+     *
+     * @return array
+     */
     public function findMealsForLatestWeek(): array
     {
         $latestWeekId = $this->findLatestWeek();
@@ -58,6 +63,11 @@ class MealRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     *  Looking for the latest week.
+     *
+     * @return bool|float|int|string|null
+     */
     public function findLatestWeek(): bool|float|int|string|null
     {
         return $this->getEntityManager()->createQueryBuilder()
@@ -67,6 +77,11 @@ class MealRepository extends ServiceEntityRepository
             ->getSingleScalarResult() ?? NULL;
     }
 
+    /**
+     *  Looking for latest shopping list.
+     *
+     * @return array
+     */
     public function findShoppingList(): array {
         $latestWeekId = $this->findLatestWeek();
         return $this->getEntityManager()->createQueryBuilder()
@@ -79,7 +94,17 @@ class MealRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-
+    /**
+     *  Looking for meal by type.
+     *
+     * @param int $mealId
+     *   Meal id.
+     * @param string $mealType
+     *   Meal type.
+     *
+     * @return array|null
+     *  Returns array of meals.
+     */
     public function findByMealType(int $mealId, string $mealType): ?array {
         $allowedMealTypes = ['breakfast', 'brunch', 'lunch', 'snack', 'dinner'];
         if (!in_array($mealType, $allowedMealTypes)) {

@@ -1,4 +1,3 @@
-const $ = require('jquery');
 require('bootstrap');
 import './styles/app.scss';
 
@@ -72,6 +71,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 500);
         });
     }
+
+    let navLinks = document.querySelectorAll('.menu');
+
+    navLinks.forEach(link => {
+        if(link.href === window.location.href) {
+            link.classList.add('active');
+        }
+    });
+
 });
 
 function toggleStepDescription(event) {

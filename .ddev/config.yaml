@@ -1,4 +1,4 @@
-name: CarFix
+name: Dietify
 type: php
 docroot: "public"
 php_version: "8.1"
