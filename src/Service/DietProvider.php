@@ -2,12 +2,10 @@
 
 namespace App\Service;
 
-use App\Entity\FavouriteMeal;
-use App\Entity\Meals;
 use App\Entity\MealPlan;
+use App\Entity\Meals;
 use App\Entity\Profile;
 use App\Entity\ShoppingList;
-use App\Repository\MealRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -16,18 +14,49 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class DietProvider
 {
+    /**
+     * @var ParameterBagInterface
+     *   The interface for accessing parameters.
+     */
     private ParameterBagInterface $parameterBag;
+
+    /**
+     * @var EntityManagerInterface
+     *   The entity manager interface for interacting with the ORM.
+     */
     private EntityManagerInterface $entityManager;
+
+    /**
+     * @var Client
+     *   The HTTP client for making requests.
+     */
     private Client $client;
-    private Security $security;
-    public function __construct(ParameterBagInterface $parameterBag, EntityManagerInterface $entityManager, Security $security)
+
+    /**
+     * Constructor for the DietProvider service.
+     *
+     * @param ParameterBagInterface $parameterBag
+     *   The parameter bag.
+     * @param EntityManagerInterface $entityManager
+     *   The entity manager.
+     * @param Security $security
+     *   The security.
+     */
+    public function __construct(ParameterBagInterface $parameterBag, EntityManagerInterface $entityManager)
     {
         $this->parameterBag = $parameterBag;
         $this->entityManager = $entityManager;
-        $this->security = $security;
         $this->client = new Client();
     }
 
+    /**
+     * Creates a diet plan by making a request to an external API.
+     *
+     * @param string $prompt
+     *   The input prompt for generating the diet plan.
+     * @return string|null
+     *   The generated diet plan or null if the request fails.
+     */
     public function makePlan(string $prompt): ?string
     {
         $apiKey = $this->parameterBag->get('gpt_secret_key');
@@ -54,6 +83,14 @@ class DietProvider
         return null;
     }
 
+    /**
+     * Processes the generated diet plan, creates meal entities, and persists them in the database.
+     *
+     * @param string $jsonResponse
+     *   The JSON response from the diet generation API.
+     * @param UserInterface $user
+     *   The user for whom the diet plan is being created.
+     */
     public function makeDiet(string $jsonResponse, UserInterface $user): void
     {
         $jsonResponse = preg_replace('/(\d+)g/', '$1', $jsonResponse);
@@ -95,7 +132,12 @@ class DietProvider
         $this->entityManager->flush();
     }
 
-
+    /**
+     * Retrieves a shopping list for the latest meal plan.
+     *
+     * @return string
+     *   The shopping list in a string format, ready for download.
+     */
     public function getShoppingList(): string
     {
         $shoppingList = $this->entityManager->getRepository(Meals::class)->findShoppingList();
@@ -104,7 +146,17 @@ class DietProvider
         return implode("\r\n", $items);
     }
 
-    public function canUserGeneratePlanThisWeek(UserInterface $user): bool {
+    /**
+     * Determines whether the user can generate a new meal plan for the current week.
+     *
+     * @param UserInterface $user
+     *   The user in question.
+     *
+     * @return bool
+     *   True if the user can generate a new plan, false otherwise.
+     */
+    public function canUserGeneratePlanThisWeek(UserInterface $user): bool
+    {
         $weekTimestamps = $this->getStartAndEndOfWeek();
         $qb = $this->entityManager->getRepository(MealPlan::class)->createQueryBuilder('mp');
 
@@ -120,7 +172,14 @@ class DietProvider
         return count($existingPlan) === 0;
     }
 
-    private function getStartAndEndOfWeek(): array {
+    /**
+     * Calculates the start and end timestamps of the current week.
+     *
+     * @return array
+     *   An array containing the start and end timestamps.
+     */
+    private function getStartAndEndOfWeek(): array
+    {
         $today = new \DateTime();
         $startOfWeek = clone $today;
         $endOfWeek = clone $today;
@@ -135,6 +194,17 @@ class DietProvider
         ];
     }
 
+    /**
+     * Organizes meal data by encoding it into JSON and appending a unique identifier.
+     *
+     * @param mixed $meal
+     *   The meal entity.
+     * @param int $mealId
+     *   The ID of the meal.
+     *
+     * @return array
+     *   An array containing the organized meal data.
+     */
     public function organizeMealData($meal, $mealId): array
     {
         return [

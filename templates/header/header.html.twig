@@ -13,7 +13,7 @@
         </div>
         {% if app.user %}
             <div class="header__login-container">
-                <a href="{{ path('app_logout') }}" class="btn">LOG OUT</a>
+                <a href="{{ path('app_logout') }}" class="btn-logout">LOG OUT</a>
             </div>
         {% else %}
             <div class="header__login-container">
@@ -37,7 +37,7 @@
             <div class="nav-menu__item"><a href="{{ path('app_profile') }}" class="menu">PROFILE</a></div>
             {% if app.user %}
                 <div class="logout__buttons-mobile">
-                    <a href="{{ path('app_logout') }}" class="btn">LOG OUT</a>
+                    <a href="{{ path('app_logout') }}" class="btn-logout">LOG OUT</a>
                 </div>
             {% else %}
                 <div class="login__buttons-mobile">

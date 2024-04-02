@@ -102,13 +102,27 @@ body {
 }
 
 .btn-view-plans,
-.btn-get-your-plan,
-.btn {
+.btn-get-your-plan {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 300px;
   height: 50px;
+  text-align: center;
+  padding: 5px 15px;
+  border-radius: 10px;
+  background-color: #7BED9F;
+  text-decoration: none;
+  color: #101010;
+  font-weight: 600;
+}
+
+.btn-logout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
+  height: 45px;
   text-align: center;
   padding: 5px 15px;
   border-radius: 10px;
@@ -158,6 +172,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: 35px;
 }
 
 .meals-today {
@@ -282,14 +297,21 @@ body {
   background-color: #FFFFFF;
 }
 
-.step::after {
+.step-title {
+  position: relative;
+  font-weight: 600;
+  width: 100%;
+  max-width: 750px;
+}
+
+.step-title::after {
   content: '';
   position: absolute;
-  right: 20px;
-  top: 50%;
+  right: 15px;
+  top: 5px;
   border: solid #000;
-  border-width: 0 2px 2px 0;
-  padding: 6px;
+  border-width: 0 1px 1px 0;
+  padding: 5px;
   transform: translateY(-50%) rotate(45deg);
   display: inline-block;
   transition: rotate 0.3s ease, transform 0.3s ease;
@@ -297,12 +319,11 @@ body {
 
 .step-expanded {
   height: 200px;
-  padding: 20px;
 }
 
-.step.expanded::after {
+.step-title.chevron-rotated::after {
   transform: translateY(-50%) rotate(-135deg);
-  top: 45px;
+  top: 15px;
   transition: rotate 0.3s ease, transform 0.3s ease;
 }
 
@@ -315,6 +336,7 @@ body {
 }
 
 .step .step-text {
+  max-width: 700px;
   font-size: 16px;
   transition: all 0.3s ease;
 }
@@ -458,6 +480,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: -1;
 }
 
 .elipse-login::before,
@@ -495,6 +518,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: -1;
 }
 
 .elipse-left::before,
@@ -510,6 +534,7 @@ body {
   background-color: rgba(123, 255, 159, 0.5);
   bottom: -100px;
   right: -100px;
+  z-index: -2;
 }
 
 .elipse-left::after {
@@ -518,6 +543,7 @@ body {
   background-color: rgba(123, 255, 159, 0.25);
   bottom: -300px;
   right: -300px;
+  z-index: -2;
 }
 
 .bmi-container {
@@ -596,7 +622,7 @@ body {
     padding: 0 3px;
   }
 
-  &__tile {
+  &__tile-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -832,13 +858,14 @@ body {
   &__meal-details {
     justify-content: space-between;
     width: 900px;
-    height: 50px;
+    height: 60px;
     border-top: 1px solid #EBEBEB;
   }
 
   &__meal-name {
     font-weight: 600;
     padding-left: 20px;
+    margin-top: 10px;
   }
 }
 
@@ -919,7 +946,7 @@ body {
       justify-content: center;
       align-items: center;
       text-align: center;
-      height: 50px;
+      height: 80px;
 
       a {
         color: #101010;
@@ -1014,6 +1041,12 @@ body {
     }
   }
 
+  .footer {
+    &__media {
+      justify-content: end;
+    }
+  }
+
   .about {
     &__welcome {
       font-size: 30px;
@@ -1044,11 +1077,25 @@ body {
 
   .meal-container {
     flex-direction: column;
+    margin-right: unset;
   }
 
   .step {
-    width: 350px;
+    max-width: 335px;
+    height: 50px;
     font-size: 16px;
+    align-items: start;
+    text-align: left;
+    padding: unset;
+  }
+
+  .step-title {
+    font-weight: 600;
+    padding-left: 20px;
+  }
+
+  .step-text {
+    padding-left: 20px;
   }
 
   .step-expanded {
@@ -1057,10 +1104,6 @@ body {
 
   .step::after {
     right: 15px;
-  }
-
-  .step-title {
-    width: 275px;
   }
 
   .favorites-toggle {
@@ -1078,8 +1121,14 @@ body {
       height: 145px;
     }
 
+    &__links {
+      flex-direction: column;
+      gap: 20px;
+    }
+
     &__meal-info {
       height: 45px;
+      text-align: center;
     }
 
     &__day-title {
@@ -1090,6 +1139,14 @@ body {
       padding-bottom: 10px;
       text-align: center;
     }
+
+    &__day {
+      max-width: 335px;
+    }
+
+    &__meal-details {
+      flex-direction: column;
+    }
   }
 
   .favourites {
@@ -1098,7 +1155,7 @@ body {
     &__meal-details {
       width: 360px;
       flex-direction: column;
-      height: 80px;
+      height: 100px;
     }
 
     &__meal {
@@ -1133,5 +1190,51 @@ body {
 
   .profile-form {
     margin-top: 30px;
+  }
+
+  .bmi {
+    width: 335px;
+    height: 1350px;
+    margin-bottom: 10px;
+    justify-content: unset;
+    text-align: center;
+
+    h1 {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .categories__tile {
+      margin: 10px;
+    }
+
+    p {
+      margin-bottom: 20px;
+    }
+
+    p:last-child {
+      margin-top: 20px;
+    }
+  }
+
+  .categories__tile-container {
+    width: 335px;
+    height: 70px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    background-color: #FBFBFB;
+    border: 1px solid #EBEBEB;
+    border-radius: 5px;
+    margin: 5px;
+    text-align: left;
+  }
+
+  .btn-logout {
+    margin-left: unset;
+  }
+
+  .how-it-works-container {
+    margin-top: unset;
   }
 }

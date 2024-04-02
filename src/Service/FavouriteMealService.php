@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\FavouriteMeal;
 use App\Entity\Meals;
-use App\Entity\User;
 use App\Repository\FavouriteMealRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -12,15 +11,45 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class FavouriteMealService
 {
+    /**
+     * @var EntityManagerInterface
+     *   The entity manager interface
+     */
     protected EntityManagerInterface $entityManager;
+
+    /**
+     * @var Security
+     *   The security component
+     */
     protected Security $security;
 
+    /**
+     * Constructor for the FavouriteMealService.
+     *
+     * @param EntityManagerInterface $entityManager
+     *   The entity manager interface
+     * @param Security $security
+     *   The security component
+     */
     public function __construct(EntityManagerInterface $entityManager, Security $security)
     {
         $this->entityManager = $entityManager;
         $this->security = $security;
     }
 
+    /**
+     * Adds a meal to the user's favourites.
+     *
+     * @param UserInterface $user
+     *   The user to whom the meal will be added as favourite
+     * @param int $mealId
+     *   The ID of the meal to be added
+     * @param string $mealType
+     *   The type of the meal (e.g., 'breakfast', 'lunch', etc.)
+     *
+     * @return array
+     *   Status and message about the operation
+     */
     public function addMealToFavorites(UserInterface $user, $mealId, $mealType): array
     {
         $mealRepository = $this->entityManager->getRepository(Meals::class);
@@ -57,6 +86,19 @@ class FavouriteMealService
         return ['status' => 'success', 'message' => 'Meal added to favorites'];
     }
 
+    /**
+     * Removes a meal from the user's favourites.
+     *
+     * @param UserInterface $user
+     *   The user from whom the meal will be removed
+     * @param int $mealId
+     *   The ID of the meal to be removed
+     * @param string $mealType
+     *   The type of the meal (e.g., 'breakfast', 'lunch', etc.)
+     *
+     * @return array
+     *   Status and message about the operation
+     */
     public function removeMealFromFavorites(UserInterface $user, $mealId, $mealType): array
     {
         $meal = $this->entityManager->getRepository(Meals::class)->find($mealId);
@@ -81,7 +123,16 @@ class FavouriteMealService
         return ['status' => 'success', 'message' => 'Meal removed from favorites'];
     }
 
-    public function getGroupedFavoritesByUser(UserInterface $user, FavouriteMealRepository $favouriteMealRepository): array
+    /**
+     * Retrieves and groups all favourite meals by meal type for a user.
+     *
+     * @param FavouriteMealRepository $favouriteMealRepository
+     *   The repository for favourite meals
+     *
+     * @return array
+     *   The grouped list of favourite meals by type
+     */
+    public function getGroupedFavoritesByUser(FavouriteMealRepository $favouriteMealRepository): array
     {
         $userId = $this->security->getUser();
         $favourites = $favouriteMealRepository->getFavouritesByType($userId);

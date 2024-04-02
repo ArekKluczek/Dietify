@@ -81,6 +81,7 @@ function toggleStepDescription(event) {
     text.classList.toggle('hidden');
     stepContainer.classList.toggle('expanded');
     stepContainer.classList.toggle('step-expanded');
+    stepContainer.querySelector('.step-title').classList.toggle('chevron-rotated');
 }
 
 document.querySelectorAll('.step').forEach(function(step) {

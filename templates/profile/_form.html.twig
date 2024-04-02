@@ -22,4 +22,7 @@
         {{ form_end(profileForm) }}
     </div>
     <div class="elipse-left"></div>
+    {% block javascripts %}
+        {{ parent() }}
+    {% endblock %}
 {% endblock %}

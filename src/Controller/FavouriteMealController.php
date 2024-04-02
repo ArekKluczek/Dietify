@@ -50,7 +50,7 @@ class FavouriteMealController extends AbstractController
             throw $this->createNotFoundException('User not found.');
         }
 
-        $groupedFavourites = $this->favouriteMealService->getGroupedFavoritesByUser($user, $favouriteMealRepository);
+        $groupedFavourites = $this->favouriteMealService->getGroupedFavoritesByUser($favouriteMealRepository);
 
         return $this->render('favourite_meal/index.html.twig', [
             'groupedFavourites' => $groupedFavourites,

@@ -27,8 +27,7 @@ class ProfileRepository extends ServiceEntityRepository
             ->andWhere('p.userid = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
 }
