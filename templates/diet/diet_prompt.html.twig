@@ -1,5 +1,24 @@
 {% autoescape false %}
-    Please generate a weekly meal plan in JSON format for a person with the following parameters: height {{ height }}cm, weight {{ weight }}kg, age {{ age }} years, "{{ gender }}", activity "{{ activity }}". The plan should include 5 days, starting from 'monday' to 'friday' as fields, with 5 meals each day also as array fields: 'breakfast', 'brunch', 'lunch', 'snack', and 'dinner'. Each meal entry should specify the meal's name as "name", "calories", "carbohydrates", "protein", and the recommended time as "time" for consumption also provide meal preparation time as "preparation_time" field which should be int.
-    Please fill in the rest of the week with varied meals that fit a balanced diet and provide a complete shopping list for the entire week in a separate array field named 'shopping_list'.
-    Also please generate caloric demand and return int as field "caloric_demand" witch will be float.
+    Generate a weekly meal plan as JSON for an individual with specific parameters:
+    height {{ height }}cm, weight {{ weight }}kg, age {{ age }} years, gender "{{ gender }}",
+    and activity level "{{ activity }}". The plan should cover Monday to Friday,
+    with each day including meals for breakfast, brunch, lunch, snack, and dinner.
+    Each meal should detail the name, calories, carbohydrates, protein, recommended consumption time, and preparation time.
+    Additionally, calculate the individual's daily caloric demand and provide a comprehensive shopping list for the week.
+
+    JSON structure:
+    {
+    "monday": {
+    "breakfast": [{"name": "", "calories": 0, "carbohydrates": 0, "protein": 0, "time": "", "preparation_time": 0}],
+    "brunch": [{"name": "", "calories": 0, "carbohydrates": 0, "protein": 0, "time": "", "preparation_time": 0}],
+    "lunch": [{"name": "", "calories": 0, "carbohydrates": 0, "protein": 0, "time": "", "preparation_time": 0}],
+    "snack": [{"name": "", "calories": 0, "carbohydrates": 0, "protein": 0, "time": "", "preparation_time": 0}],
+    "dinner": [{"name": "", "calories": 0, "carbohydrates": 0, "protein": 0, "time": "", "preparation_time": 0}]
+    },
+    "shopping_list": [],
+    "caloric_demand": 0.0
+    }
+
+    Ensure to make plan for each day starting from "monday" to "friday"
+
 {% endautoescape %}

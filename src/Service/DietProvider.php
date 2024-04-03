@@ -68,7 +68,7 @@ class DietProvider
             'json' => [
                 'prompt' => $prompt,
                 "model" => "gpt-3.5-turbo-instruct",
-                "max_tokens" => 3000,
+                "max_tokens" => 3500,
                 "temperature" => 0.7,
             ],
         ]);
@@ -112,7 +112,9 @@ class DietProvider
         $this->entityManager->persist($shoppingList);
 
         foreach ($dietData as $dayName => $dayMeals) {
-            if ($dayName === 'shopping_list' || $dayName == 'caloric_demand') {
+            $allowedDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+
+            if (!in_array(strtolower($dayName), $allowedDays)) {
                 continue;
             }
 

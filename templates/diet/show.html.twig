@@ -9,13 +9,13 @@
                 </div>
                 {% for mealType, meal in mealsOfDay[0] %}
                     <div class="meal-plan__meal">
-                        <div class="meal-plan__meal-time">{{ mealType|capitalize }} {{ meal.time }}</div>
+                        <div class="meal-plan__meal-time">{{ mealType|capitalize }} {{ meal[0].time }}</div>
                         <div class="meal-plan__meal-details">
-                            <div class="meal-plan__meal-name">{{ meal.name }}</div>
+                            <div class="meal-plan__meal-name">{{ meal[0].name }}</div>
                             <div class="meal-plan__meal-info">
-                                <span class="meal-plan__meal-calories"><span class="color-green">{{ meal.calories }}</span> kcal</span>
-                                <span class="meal-plan__meal-protein"><span class="color-green">{{ meal.protein }}</span> protein</span>
-                                <span class="meal-plan__meal-carbs"><span class="color-green">{{ meal.carbohydrates }}</span> carbohydrates</span>
+                                <span class="meal-plan__meal-calories"><span class="color-green">{{ meal[0].calories }}</span> kcal</span>
+                                <span class="meal-plan__meal-protein"><span class="color-green">{{ meal[0].protein }}</span> protein</span>
+                                <span class="meal-plan__meal-carbs"><span class="color-green">{{ meal[0].carbohydrates }}</span> carbohydrates</span>
                             </div>
                             <button class="favorites-toggle {{ meal.uniqueMealId in favoriteMealsIds ? 'remove-from-favorites' : 'add-to-favorites' }}"
                                     data-meal-type="{{ mealType }}"

@@ -17,8 +17,9 @@ class DashboardController extends AbstractController
     {
         $user = $security->getUser();
         if ($user) {
+            $userId = $user->getId();
 
-            $meal = $entityManager->getRepository(Meals::class)->findDayByLatestWeek(date('l', strtotime(gmdate('Y-m-d', time()))));
+            $meal = $entityManager->getRepository(Meals::class)->findDayByLatestWeek($userId, date('l', strtotime(gmdate('Y-m-d', time()))));
             if ($meal) {
                 $mealId = $meal[0]->getId();
 

@@ -23,10 +23,19 @@ class MealRepository extends ServiceEntityRepository
         parent::__construct($registry, Meals::class);
     }
 
+
     /**
-     * @return Meals[] Returns an array of Meal objects
+     *  Looking for today's meals.
+     *
+     * @param int $userId
+     *  User id.
+     * @param string $dayOfWeek
+     *  Day of week.
+     *
+     * @return array|null
+     *  Returns array of meals for actual day.
      */
-    public function findDayByLatestWeek(string $value): array|null
+    public function findDayByLatestWeek(int $userId, string $dayOfWeek): array|null
     {
         $latestWeekId = $this->findLatestWeek();
 
@@ -38,8 +47,10 @@ class MealRepository extends ServiceEntityRepository
             ->innerJoin('m.mealPlan', 'mp')
             ->where('mp.weekId = :weekId')
             ->andWhere('m.dayOfWeek = :val')
-            ->setParameter('val', $value)
+            ->andWhere('mp.userid = :userId')
+            ->setParameter('val', $dayOfWeek)
             ->setParameter('weekId', $latestWeekId)
+            ->setParameter('userId', $userId)
             ->getQuery()
             ->getResult() ?? NULL;
     }

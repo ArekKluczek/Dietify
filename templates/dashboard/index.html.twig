@@ -24,14 +24,14 @@
                             <div class="meal">
                                 <div class="meal__type-container">
                                     <div class="meal__type">{{ meal_type|capitalize }}</div>
-                                    <div class="meal__preparation-time">{{ meal_details['preparation_time'] }}m</div>
+                                    <div class="meal__preparation-time">{{ meal_details[0]['preparation_time'] }}m</div>
                                 </div>
                                 <div class="meal__details">
-                                    <p> {{ meal_details['name'] }}</p>
+                                    <p> {{ meal_details[0]['name'] }}</p>
                                     <div class="meal__macros">
-                                        <p>KCAL: <span class="color-green">{{ meal_details['calories'] }}</span></p>
-                                        <p>C: <span class="color-green">{{ meal_details['carbohydrates'] }}g</span></p>
-                                        <p>P: <span class="color-green">{{ meal_details['protein'] }}g</span></p>
+                                        <p>KCAL: <span class="color-green">{{ meal_details[0]['calories'] }}</span></p>
+                                        <p>C: <span class="color-green">{{ meal_details[0]['carbohydrates'] }}g</span></p>
+                                        <p>P: <span class="color-green">{{ meal_details[0]['protein'] }}g</span></p>
                                     </div>
                                 </div>
                             </div>
