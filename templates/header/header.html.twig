@@ -21,14 +21,6 @@
                 <a href="{{ path('app_register') }}" class="signup-button">SIGN UP</a>
             </div>
         {% endif %}
-
-        <div class="hamburger-menu">
-            <button id="hamburger" aria-label="Otwórz menu" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
         <nav id="nav-menu" class="nav-menu">
             <div class="nav-menu__item"><a href="{{ path('app_dashboard_how_it_works') }}" class="menu">HOW IT WORKS</a>
             </div>
@@ -46,5 +38,12 @@
                 </div>
             {% endif %}
         </nav>
+        <div class="hamburger-menu">
+            <button id="hamburger" aria-label="Otwórz menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
     </header>
 {% endblock %}

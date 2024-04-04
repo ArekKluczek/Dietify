@@ -1,7 +1,7 @@
 {% block footer %}
     <footer class="footer">
         <div class="footer__container">
-            <span>&copy Arkadiusz Kluczek 2024</span>
+            <span>&copy Arkadiusz Kluczek {{ 'now' | date('Y') }}</span>
             <div class="footer__media">
                 <span><a href="https://github.com/ArekKluczek/Dietify"><img
                                 src="{{ asset('build//images/Github.svg') }}" alt="Github"></a></span>

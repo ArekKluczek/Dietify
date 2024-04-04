@@ -143,11 +143,11 @@ class FavouriteMealService
             $mealNameJson = $favourite->getMealName();
             $mealName = json_decode($mealNameJson, true);
             $mealDetails = [
-                'name' => $mealName['name'],
-                'calories' => $mealName['calories'],
-                'carbohydrates' => $mealName['carbohydrates'],
-                'protein' => $mealName['protein'],
-                'time' => $mealName['time']
+                'name' => $mealName[0]['name'],
+                'calories' => $mealName[0]['calories'],
+                'carbohydrates' => $mealName[0]['carbohydrates'],
+                'protein' => $mealName[0]['protein'],
+                'time' => $mealName[0]['time']
             ];
             $groupedFavourites[$mealType][] = [
                 'mealDetails' => $mealDetails,

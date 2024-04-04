@@ -28,6 +28,7 @@ class ProfileType extends AbstractType
                 ]
             ])
             ->add('activitylevel', ChoiceType::class, [
+                'label' => 'Activity Level',
                 'choices' => [
                     'low' => 'low',
                     'medium' => 'medium',
@@ -35,6 +36,7 @@ class ProfileType extends AbstractType
                 ]
             ])
             ->add('dietpreferences', TextareaType::class, [
+                'label' => 'Diet Preferences',
                 'required' => false
             ])
             ->add('allergies', TextareaType::class, [

@@ -17,6 +17,11 @@
                                 <span class="meal-plan__meal-protein"><span class="color-green">{{ meal[0].protein }}</span> protein</span>
                                 <span class="meal-plan__meal-carbs"><span class="color-green">{{ meal[0].carbohydrates }}</span> carbohydrates</span>
                             </div>
+                            <div class="meal-plan__meal-info-mobile">
+                                <span class="meal-plan__meal-calories-mobile">kcal:<span class="color-green"> {{ meal[0].calories }}</span> </span>
+                                <span class="meal-plan__meal-protein-mobile">P:<span class="color-green"> {{ meal[0].protein }}</span> </span>
+                                <span class="meal-plan__meal-carbs-mobile">C:<span class="color-green"> {{ meal[0].carbohydrates }}</span></span>
+                            </div>
                             <button class="favorites-toggle {{ meal.uniqueMealId in favoriteMealsIds ? 'remove-from-favorites' : 'add-to-favorites' }}"
                                     data-meal-type="{{ mealType }}"
                                     data-meal-id="{{ meal.uniqueMealId }}">

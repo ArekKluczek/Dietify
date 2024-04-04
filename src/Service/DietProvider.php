@@ -60,7 +60,7 @@ class DietProvider
     public function makePlan(string $prompt): ?string
     {
         $apiKey = $this->parameterBag->get('gpt_secret_key');
-        $response = $this->client->post('https://api.openai.com/v1/completions', [
+        $response = $this->client->post('https://api.openai.com/chat/completions', [
             'headers' => [
                 'Authorization' => "Bearer {$apiKey}",
                 'Content-Type' => 'application/json',
@@ -69,7 +69,7 @@ class DietProvider
                 'prompt' => $prompt,
                 "model" => "gpt-3.5-turbo-instruct",
                 "max_tokens" => 3500,
-                "temperature" => 0.7,
+                "temperature" => 1,
             ],
         ]);
 
