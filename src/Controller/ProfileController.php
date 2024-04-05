@@ -70,7 +70,7 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        $profile = $this->entityManager->getRepository(Profile::class)->find($this->security->getUser()->getId());
+        $profile = $this->entityManager->getRepository(Profile::class)->findByUserId($this->security->getUser()->getId());
 
         if (!$profile) {
             return $this->redirectToRoute('app_profile');

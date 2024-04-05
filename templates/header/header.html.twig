@@ -8,7 +8,7 @@
         <div class="header__cases">
             <a href="{{ path('app_dashboard_how_it_works') }}" class="menu">HOW IT WORKS</a>
             <a href="{{ path('app_profile_bmi') }}" class="menu">BMI</a>
-            <a href="{{ path('app_profile_diet_show') }}" class="menu">MEALPLAN</a>
+            <a href="{{ path('app_profile_diet_show') }}" class="menu generate-plan-link">MEALPLAN</a>
             <a href="{{ path('app_profile') }}" class="menu">PROFILE</a>
         </div>
         {% if app.user %}
@@ -25,7 +25,7 @@
             <div class="nav-menu__item"><a href="{{ path('app_dashboard_how_it_works') }}" class="menu">HOW IT WORKS</a>
             </div>
             <div class="nav-menu__item"><a href="{{ path('app_profile_bmi') }}" class="menu">BMI</a></div>
-            <div class="nav-menu__item"><a href="{{ path('app_profile_diet_show') }}" class="menu">MEALPLAN</a></div>
+            <div class="nav-menu__item"><a href="{{ path('app_profile_diet_show') }}" class="menu generate-plan-link">MEALPLAN</a></div>
             <div class="nav-menu__item"><a href="{{ path('app_profile') }}" class="menu">PROFILE</a></div>
             {% if app.user %}
                 <div class="logout__buttons-mobile">
@@ -39,7 +39,7 @@
             {% endif %}
         </nav>
         <div class="hamburger-menu">
-            <button id="hamburger" aria-label="Otwórz menu" aria-expanded="false">
+            <button id="hamburger" aria-label="Open menu" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
