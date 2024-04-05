@@ -10,6 +10,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class DietProvider
@@ -31,6 +33,12 @@ class DietProvider
      *   The HTTP client for making requests.
      */
     private Client $client;
+
+    /**
+     * @var UrlGeneratorInterface
+     *   The Url generator.
+     */
+    private UrlGeneratorInterface $urlGenerator;
 
     /**
      * Constructor for the DietProvider service.
@@ -59,27 +67,33 @@ class DietProvider
      */
     public function makePlan(string $prompt): ?string
     {
-        $apiKey = $this->parameterBag->get('gpt_secret_key');
-        $response = $this->client->post('https://api.openai.com/chat/completions', [
-            'headers' => [
-                'Authorization' => "Bearer {$apiKey}",
-                'Content-Type' => 'application/json',
-            ],
-            'json' => [
-                'prompt' => $prompt,
-                "model" => "gpt-3.5-turbo-instruct",
-                "max_tokens" => 3500,
-                "temperature" => 1,
-            ],
-        ]);
+        try {
+            $apiKey = $this->parameterBag->get('gpt_secret_key');
+            $response = $this->client->post('https://api.openai.com/v1/completions', [
+                'headers' => [
+                    'Authorization' => "Bearer {$apiKey}",
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'prompt' => $prompt,
+                    "model" => "gpt-3.5-turbo-instruct",
+                    "max_tokens" => 3500,
+                    "temperature" => 1,
+                ],
+            ]);
 
-        if ($response->getStatusCode() == 200) {
-            $body = $response->getBody();
-            $data = json_decode($body->getContents(), true);
+            if ($response->getStatusCode() == 200) {
+                $body = $response->getBody();
+                $data = json_decode($body->getContents(), true);
 
-            return $data['choices'][0]['text'] ?? null;
+                if (!empty($data['choices'][0]['text'])) {
+                    return $data['choices'][0]['text'];
+                }
+
+            }
+        } catch (\Exception $e) {
+            return new RedirectResponse($this->urlGenerator->generate('app_profile_info'));
         }
-
         return null;
     }
 

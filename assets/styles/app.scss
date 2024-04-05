@@ -12,6 +12,21 @@
   width: 100%;
 }
 
+.alert {
+  position: absolute;
+  top: 25%;
+  width: 100%;
+  left: 0;
+  height: 50px;
+  background-color: #f8d7da;
+  color: red;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
 .header {
   position: sticky;
   display: flex;
@@ -631,7 +646,6 @@ h1 {
 
 .color-green {
   color: #7BED9F;
-  font-size: 16px;
 }
 
 .categories {
@@ -904,6 +918,7 @@ h1 {
     font-weight: 600;
     border: none;
     margin-top: 10px;
+    cursor: pointer;
   }
 
   input, textarea, select {
@@ -961,7 +976,8 @@ h1 {
 }
 
 .info {
-  width: 900px;
+  max-width: 900px;
+  width: 100%;
   font-size: 16px;
   border: 1px solid #7BED9F;
   padding: 15px;
@@ -1319,7 +1335,6 @@ h1 {
 
   .bmi {
     max-width: 335px;
-    height: 1350px;
     margin-bottom: 10px;
     justify-content: unset;
     text-align: center;

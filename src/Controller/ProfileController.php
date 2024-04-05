@@ -120,7 +120,7 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        $meals = $this->entityManager->getRepository(Meals::class)->findMealsForLatestWeek();
+        $meals = $this->entityManager->getRepository(Meals::class)->findMealsForLatestWeek($user?->getId());
 
         if (!$meals) {
             return $this->redirectToRoute('app_profile_diet');

@@ -8,7 +8,7 @@
         <a href="{{ path('app_user', {'id': app.user.id}) }}">Settings</a>
         <a href="{{ path('app_favourites') }}">Favourites</a>
     </div>
-        {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
 
     <div class="elipse-left"></div>
     {% block javascripts %}

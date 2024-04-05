@@ -60,7 +60,7 @@ class MealRepository extends ServiceEntityRepository
      *
      * @return array
      */
-    public function findMealsForLatestWeek(): array
+    public function findMealsForLatestWeek(int $userId): array
     {
         $latestWeekId = $this->findLatestWeek();
 
@@ -69,7 +69,9 @@ class MealRepository extends ServiceEntityRepository
             ->from(Meals::class, 'm')
             ->innerJoin('m.mealPlan', 'mp')
             ->where('mp.weekId = :weekId')
+            ->andWhere('mp.userid = :userId')
             ->setParameter('weekId', $latestWeekId)
+            ->setParameter('userId', $userId)
             ->getQuery()
             ->getResult();
     }

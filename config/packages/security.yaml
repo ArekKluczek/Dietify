@@ -9,6 +9,7 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+    enable_authenticator_manager: true
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -22,6 +23,10 @@ security:
                 enable_csrf: true
             logout:
                 path: app_logout
+            security:
+        custom:
+            custom_authenticators:
+                - App\Security\Authenticator
                 # where to redirect after logout
                 # target: app_any_route
 
