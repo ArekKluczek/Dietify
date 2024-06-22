@@ -9,7 +9,7 @@ const Header = ({ user }) => {
                 <Link href="/"><Image src="/Dietify-logo.png" alt="Dietify logo" width={150} height={50} /></Link>
             </div>
             <div className="header__cases">
-                <Link href="/howitworks">HOW IT WORKS</Link>
+                <Link href="/howItWorks">HOW IT WORKS</Link>
                 <Link href="/bmi">BMI</Link>
                 <Link href="/mealplan">MEALPLAN</Link>
                 <Link href="/profile">PROFILE</Link>

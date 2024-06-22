@@ -30,140 +30,50 @@ class ProfileController extends AbstractController
         $this->entityManager = $entityManager;
         $this->security = $security;
     }
-
-    #[Route('/profile', name: 'app_profile')]
-    public function index(Request $request): Response
+    #[Route('/api/profile', name: 'api_profile', methods: ['GET'])]
+    public function getProfile(): Response
     {
         $user = $this->security->getUser();
         if (!$user) {
-            return $this->redirectToRoute('app_login');
+            return $this->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
 
-        $user = $this->entityManager->getRepository(User::class)->find($this->security->getUser()->getId());
         $profile = $this->entityManager->getRepository(Profile::class)->findOneBy(['userid' => $user]);
 
         if (!$profile) {
+            return $this->json(['error' => 'Profile not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json($profile, Response::HTTP_OK, [], ['groups' => 'profile:read']);
+    }
+
+    #[Route('/api/profile', name: 'api_profile_update', methods: ['POST'])]
+    public function updateProfile(Request $request): Response
+    {
+        $user = $this->entityManager->getRepository(User::class)->find($this->security->getUser()->getId());
+        if (!$user) {
+            return $this->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $profile = $this->entityManager->getRepository(Profile::class)->findOneBy(['userid' => $user]);
+        if (!$profile) {
             $profile = new Profile();
-        }
-
-        $form = $this->createForm(ProfileType::class, $profile);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
             $profile->setUserid($user);
-            $this->entityManager->persist($profile);
-            $this->entityManager->flush();
-
-            return $this->redirectToRoute('app_dashboard');
         }
 
-        return $this->render('profile/_form.html.twig', [
-            'profileForm' => $form->createView(),
-        ]);
+        $data = json_decode($request->getContent(), true);
+        $profile->setHeight($data['height'] ?? $profile->getHeight());
+        $profile->setWeight($data['weight'] ?? $profile->getWeight());
+        $profile->setAge($data['age'] ?? $profile->getAge());
+        $profile->setGender($data['gender'] ?? $profile->getGender());
+        $profile->setActivityLevel($data['activitylevel'] ?? $profile->getActivityLevel());
+        $profile->setDietPreferences($data['dietpreferences'] ?? $profile->getDietPreferences());
+        $profile->setAllergies($data['allergies'] ?? $profile->getAllergies());
+
+        $this->entityManager->persist($profile);
+        $this->entityManager->flush();
+
+        return $this->json($profile, Response::HTTP_OK, [], ['groups' => 'profile:read']);
     }
 
-    #[Route('/profile/bmi', name: 'app_profile_bmi')]
-    public function calculateBMI(): Response
-    {
-        $user = $this->security->getUser();
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
-
-        $profile = $this->entityManager->getRepository(Profile::class)->findByUserId($this->security->getUser()->getId());
-
-        if (!$profile) {
-            return $this->redirectToRoute('app_profile');
-        }
-
-        $bmiResult = $this->profileService->calculateBMI($profile);
-
-        return $this->render('profile/bmi.html.twig', [
-            'bmiValue' => $bmiResult['value'],
-            'bmiCategory' => $bmiResult['category'],
-        ]);
-    }
-
-    #[Route('/profile/diet', name: 'app_profile_diet', methods: ['GET', 'POST'])]
-    public function generate(): Response
-    {
-        $user = $this->security->getUser();
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
-
-        $profile = $this->entityManager->getRepository(Profile::class)->findByUserId($user->getId());
-        if (!$profile) {
-            return $this->redirectToRoute('app_profile');
-        }
-
-        $jsonResponse = null;
-        $prompt = $this->renderView('diet/diet_prompt.html.twig', $this->profileService->getDietPromptData($profile));
-
-        if ($this->dietProvider->canUserGeneratePlanThisWeek($user)) {
-            $jsonResponse = $this->dietProvider->makePlan($prompt);
-        }
-
-        if ($jsonResponse) {
-            $this->dietProvider->makeDiet($jsonResponse, $user);
-            return $this->redirectToRoute('app_profile_diet_show');
-        }
-
-        return $this->redirectToRoute('app_profile_info');
-    }
-
-    #[Route('/profile/diet/show', name: 'app_profile_diet_show', methods: ['GET'])]
-    public function showDiet(): Response
-    {
-        $user = $this->security->getUser();
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
-
-        $meals = $this->entityManager->getRepository(Meals::class)->findMealsForLatestWeek($user?->getId());
-
-        if (!$meals) {
-            return $this->redirectToRoute('app_profile_diet');
-        }
-
-        $organizedMeals = [];
-        foreach ($meals as $meal) {
-            $day = $meal->getDayOfWeek();
-            $mealId = $meal->getId();
-
-            $organizedMeals[$day][] = $this->dietProvider->organizeMealData($meal, $mealId);
-        }
-
-        $favoriteMeals = $this->entityManager->getRepository(FavouriteMeal::class)->findBy(['user' => $this->getUser()]);
-
-
-        $favoriteMealsIds = [];
-        foreach ($favoriteMeals as $favoriteMeal) {
-            $favoriteMealsIds[] = sprintf("%d-%s", $favoriteMeal->getMealId()->getId(), $favoriteMeal->getMealType());
-        }
-
-        return $this->render('diet/show.html.twig', [
-            'mealPlans' => $organizedMeals,
-            'favoriteMealsIds' => $favoriteMealsIds,
-        ]);
-    }
-
-
-    #[Route('/profile/diet/shopping-list', name: 'app_profile_diet_list', methods: ['GET'])]
-    public function downloadShoppingList(): Response
-    {
-        $csvContent = $this->dietProvider->getShoppingList();
-
-        return new Response($csvContent, 200, [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="' . 'shopping_list_' . date('Y-m-d') . '.csv' . '"',
-        ]);
-
-    }
-
-    #[Route('/profile/info', name: 'app_profile_info')]
-    public function howItWorks(): Response
-    {
-        return $this->render('profile/info.html.twig', );
-    }
 }
