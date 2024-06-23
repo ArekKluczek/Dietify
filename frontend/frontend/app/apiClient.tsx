@@ -8,7 +8,7 @@ const httpsAgent = new https.Agent({
 const apiClient = axios.create({
     httpsAgent,
     baseURL: 'https://carfix.ddev.site:448/api',
-    timeout: 5000
+    timeout: 5000,
 });
 
 export default apiClient;

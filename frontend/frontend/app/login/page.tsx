@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
 import { useState } from 'react';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import apiClient from '../apiClient';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -13,7 +13,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('https://carfix.ddev.site:448/login', {
+            const response = await apiClient.post('/login', {
                 username,
                 password,
             });
@@ -53,11 +53,6 @@ const Login = () => {
                     autoComplete="current-password"
                     required
                     onChange={(e) => setPassword(e.target.value)}
-                />
-                <input
-                    type="hidden"
-                    name="_csrf_token"
-                    value="dummy_csrf_token"
                 />
                 <button type="submit">SIGN IN</button>
             </form>

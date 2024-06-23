@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react';
-import axios from 'axios';
+import apiClient from '../apiClient';
+import {router} from "next/client";
+import {useRouter} from "next/navigation";
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -12,6 +14,7 @@ const Register = () => {
 
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
+    const router = useRouter();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,11 +23,15 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('https://carfix.ddev.site:448/api/register', formData);
+            console.log('Submitting form data:', formData);
+            const response = await apiClient.post('/register', formData);
+            console.log('Response:', response);
             setSuccess(response.data.message);
             setError(null);
+            router.push('/login');
         } catch (error) {
-            setError(error.response.data.errors);
+            console.error('Error:', error.response || error.message);
+            setError(error.response?.data.errors || 'An error occurred');
             setSuccess(null);
         }
     };
