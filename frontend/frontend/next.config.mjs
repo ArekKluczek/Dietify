@@ -4,7 +4,7 @@ const nextConfig = {
         return [
             {
                 source: '/api/:path*',
-                destination: 'https://127.0.0.1:52374/api/:path*'
+                destination: 'https://carfix.ddev.site:448/api/:path*'
             }
         ];
     },

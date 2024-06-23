@@ -9,7 +9,7 @@ const useSession = () => {
     useEffect(() => {
         const fetchSession = async () => {
             try {
-                const response = await axios.get('https://127.0.0.1:32768/api/session');
+                const response = await axios.get('https://carfix.ddev.site:448/api/session');
                 setUser(response.data);
             } catch (error) {
                 console.error('Error fetching session:', error);
