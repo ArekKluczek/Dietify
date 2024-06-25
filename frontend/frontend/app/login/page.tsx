@@ -7,23 +7,30 @@ import apiClient from '../apiClient';
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [error, setError] = useState(null);
     const router = useRouter();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         try {
+            console.log('Submitting login data:', { username, password });
             const response = await apiClient.post('/login', {
                 username,
                 password,
             });
+            console.log('Response:', response);
             if (response.data.status === 'success') {
+                localStorage.setItem('token', response.data.token);
+                setError(null);
                 await router.push('/');
             } else {
                 setError(response.data.message);
             }
-        } catch (err) {
-            setError('An error occurred. Please try again.');
+        } catch (error) {
+            // @ts-ignore
+            console.error('Error:', error.response || error.message);
+            // @ts-ignore
+            setError(error.response?.data.message || 'An error occurred. Please try again.');
         }
     };
 
@@ -36,7 +43,7 @@ const Login = () => {
                 <input
                     type="email"
                     value={username}
-                    name="_username"
+                    name="username"
                     id="username"
                     className="form-control"
                     autoComplete="email"
@@ -47,7 +54,7 @@ const Login = () => {
                 <label htmlFor="password">Password</label>
                 <input
                     type="password"
-                    name="_password"
+                    name="password"
                     id="password"
                     className="form-control"
                     autoComplete="current-password"
@@ -59,5 +66,4 @@ const Login = () => {
         </div>
     );
 };
-
 export default Login;

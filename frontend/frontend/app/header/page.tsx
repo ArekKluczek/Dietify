@@ -1,8 +1,18 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import "../globals.scss";
+import '../globals.scss';
 
-const Header = ({ user }) => {
+interface User {
+    id: string;
+    name: string;
+    email: string;
+}
+
+interface HeaderProps {
+    user: User | null;
+}
+
+const Header = ({ user }: HeaderProps) => {
     return (
         <header className="header">
             <div className="header__logo-container">
@@ -16,6 +26,7 @@ const Header = ({ user }) => {
             </div>
             {user ? (
                 <div className="header__login-container">
+                    <span>Welcome, {user.name}!</span>
                     <Link href="/logout" className="btn-logout">LOG OUT</Link>
                 </div>
             ) : (

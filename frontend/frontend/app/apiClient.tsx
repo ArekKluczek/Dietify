@@ -1,14 +1,15 @@
 import axios from 'axios';
-import https from 'https';
-
-const httpsAgent = new https.Agent({
-    rejectUnauthorized: false
-});
 
 const apiClient = axios.create({
-    httpsAgent,
     baseURL: 'https://carfix.ddev.site:448/api',
-    timeout: 5000,
+});
+
+apiClient.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
 });
 
 export default apiClient;

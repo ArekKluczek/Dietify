@@ -1,20 +1,36 @@
-"use client";
-
+'use client';
 import React, { useEffect, useState } from 'react';
-import apiClient from './apiClient';
+import { useRouter } from 'next/router';
+import apiClient from '../apiClient';
+import { isAuthenticated, fetchUserData } from '../auth';
 
 const Dashboard = () => {
     const [meals, setMeals] = useState([]);
+    const [user, setUser] = useState(null);
+    const router = useRouter();
 
     useEffect(() => {
-        apiClient.get('/meals-today')
-            .then(response => {
-                setMeals(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching meals:', error);
-            });
-    }, []);
+        const checkAuth = async () => {
+            if (!isAuthenticated()) {
+                await router.push('/login');
+            } else {
+                try {
+                    const userData = await fetchUserData();
+                    setUser(userData);
+
+                    const response = await apiClient.get('/meals-today');
+                    setMeals(response.data);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            }
+        };
+        checkAuth();
+    }, [router]);
+
+    if (!user) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <main className="main">
