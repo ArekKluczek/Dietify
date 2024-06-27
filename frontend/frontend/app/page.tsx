@@ -1,20 +1,70 @@
-"use client";
-
+'use client'
 import React, { useEffect, useState } from 'react';
-import apiClient from './apiClient';
+import apiClient from './services/apiClient';
+
+interface Meal {
+    name: string;
+    preparation_time: number;
+    calories: number;
+    carbohydrates: number;
+    protein: number;
+    uniqueMealId: string;
+}
+
+interface Meals {
+    breakfast: Meal;
+    brunch: Meal;
+    lunch: Meal;
+    snack: Meal;
+    dinner: Meal;
+}
+
+interface User {
+    id: string;
+    name: string;
+    email: string;
+}
 
 const Dashboard = () => {
-    const [meals, setMeals] = useState([]);
+    const [meals, setMeals] = useState<Meals | null>(null);
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        apiClient.get('/meals-today')
-            .then(response => {
+        const fetchUser = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const response = await apiClient.get<User>('/user', {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    setUser(response.data);
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                }
+            }
+            setLoading(false);
+        };
+
+        fetchUser();
+
+        const fetchMeals = async () => {
+            try {
+                const response = await apiClient.get<Meals | null>('/meals-today');
                 setMeals(response.data);
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Error fetching meals:', error);
-            });
+            }
+        };
+
+        fetchMeals();
     }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <main className="main">
@@ -27,31 +77,31 @@ const Dashboard = () => {
                         and we're here to help you navigate your nutritional journey with precision and care.</p>
                 </div>
                 <div className="about__buttons">
-                    <a href="/profile/diet/show" className="btn-view-plans generate-plan-link">VIEW PLANS</a>
+                    <a href="/mealPlan" className="btn-view-plans generate-plan-link">VIEW PLANS</a>
                 </div>
             </div>
-            {meals.length > 0 ? (
-                <div>
+            {user && meals ? (
+                <>
                     <h1 className="meals-today">Meals today</h1>
                     <div className="meal-container">
-                        {Object.keys(meals).map(mealTime => (
-                            <div key={mealTime} className="meal">
+                        {Object.entries(meals).map(([mealTime, meal]) => (
+                            <div key={meal.uniqueMealId} className="meal">
                                 <div className="meal__type-container">
                                     <div className="meal__type">{mealTime}</div>
-                                    <div className="meal__preparation-time">{meals[mealTime][0].preparation_time}m</div>
+                                    <div className="meal__preparation-time">{meal[0].preparation_time}m</div>
                                 </div>
                                 <div className="meal__details">
-                                    <p>{meals[mealTime][0].name}</p>
+                                    <p>{meal[0].name}</p>
                                     <div className="meal__macros">
-                                        <p>KCAL: <span className="color-green">{meals[mealTime][0].calories}</span></p>
-                                        <p>C: <span className="color-green">{meals[mealTime][0].carbohydrates}g</span></p>
-                                        <p>P: <span className="color-green">{meals[mealTime][0].protein}g</span></p>
+                                        <p>KCAL: <span className="color-green">{meal[0].calories}</span></p>
+                                        <p>C: <span className="color-green">{meal[0].carbohydrates}g</span></p>
+                                        <p>P: <span className="color-green">{meal[0].protein}g</span></p>
                                     </div>
                                 </div>
                             </div>
                         ))}
                     </div>
-                </div>
+                </>
             ) : (
                 <div className="unlogged-section">
                     <h2>Sample Meals</h2>
@@ -74,8 +124,8 @@ const Dashboard = () => {
                         </div>
                     </div>
                     <div className="unlogged-section__buttons">
-                        <a href="/profile/diet" className="btn-get-your-plan generate-plan-link">GET YOUR PLAN</a>
-                        <a href="/dashboard/how-it-works" className="btn-how-it-works">HOW IT WORKS</a>
+                        <a href="/mealPlan" className="btn-get-your-plan generate-plan-link">GET YOUR PLAN</a>
+                        <a href="/howItWorks" className="btn-how-it-works">HOW IT WORKS</a>
                     </div>
                 </div>
             )}

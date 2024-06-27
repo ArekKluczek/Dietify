@@ -2,7 +2,13 @@
 import { useState } from 'react';
 import "../globals.scss";
 
-const steps = [
+interface Step {
+    id: string;
+    title: string;
+    text: string;
+}
+
+const steps: Step[] = [
     { id: "how-it-works", title: "Step 1: Your Personal Profile", text: "Start your journey by creating a personal profile. Dietify's seamless interface makes it easy to enter your dietary preferences, allergies, fitness goals, and more. Customize your nutrition plan, track progress, avoid restricted foods, and receive tailored meal suggestions." },
     { id: "ai-integration", title: "Step 2: AI Integration", text: "After you've input your details, it's time for our cutting-edge tech to take the stage. Dietify utilizes the advanced capabilities of GPT-4 to sift through your data. By leveraging OpenAI's latest AI model, we ensure that every meal plan is not only customized but also optimized for your nutritional needs." },
     { id: "generating", title: "Step 3: Generating Deliciousness", text: "With the power of GPT-4, Dietify goes to work creating a variety of meal options that are bound to satisfy your taste buds and support your health objectives. Our AI sifts through thousands of recipes and dietary combinations to design a meal plan that's as unique as you are." },
@@ -10,10 +16,10 @@ const steps = [
     { id: "enjoy-meals", title: "Step 5: Enjoy Your Meals", text: "Once your custom meal plan is set, all that's left is for you to enjoy the mouthwatering meals. Each recipe is crafted to be easy-to-follow, ensuring you spend less time cooking and more time enjoying the flavors. Dietify turns healthy eating into a delight, not a chore." },
 ];
 
-const HowItWorksComponent = () => {
-    const [expandedStep, setExpandedStep] = useState(null);
+const HowItWorks = () => {
+    const [expandedStep, setExpandedStep] = useState<string | null>(null);
 
-    const toggleStepDescription = (stepId) => {
+    const toggleStepDescription = (stepId: string) => {
         setExpandedStep(expandedStep === stepId ? null : stepId);
     };
 
@@ -35,4 +41,4 @@ const HowItWorksComponent = () => {
     );
 };
 
-export default HowItWorksComponent;
+export default HowItWorks;

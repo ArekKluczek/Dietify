@@ -46,6 +46,7 @@ class LoginController extends AbstractController
     #[Route(path: '/api/logout', name: 'api_logout', methods: ['POST'])]
     public function apiLogout(SessionInterface $session): JsonResponse
     {
+        $session->invalidate();
         return new JsonResponse(['status' => 'success', 'message' => 'Logged out successfully']);
     }
 }

@@ -49,12 +49,15 @@ class DietProvider
      *   The entity manager.
      * @param Security $security
      *   The security.
+     * @param UrlGeneratorInterface
+     *   The url generator.
      */
-    public function __construct(ParameterBagInterface $parameterBag, EntityManagerInterface $entityManager)
+    public function __construct(ParameterBagInterface $parameterBag, EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator)
     {
         $this->parameterBag = $parameterBag;
         $this->entityManager = $entityManager;
         $this->client = new Client();
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**

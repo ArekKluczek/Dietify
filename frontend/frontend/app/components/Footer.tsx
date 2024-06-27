@@ -1,11 +1,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import styles from '../styles/Footer.module.scss';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
     return (
-        <footer className="footer">
+        <footer className="footer mt-5">
             <div className="footer__container">
                 <span> Arkadiusz Kluczek {currentYear}</span>
                 <div className="footer__media">

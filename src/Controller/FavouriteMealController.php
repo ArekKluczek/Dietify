@@ -7,7 +7,7 @@ use App\Service\FavouriteMealService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 class FavouriteMealController extends AbstractController
 {
@@ -18,7 +18,7 @@ class FavouriteMealController extends AbstractController
         $this->favouriteMealService = $favouriteMealService;
     }
 
-    #[Route('/add-to-favorites/{mealType}/{mealId}', name: 'add_to_favorites', methods: ['POST'])]
+    #[Route('/api/add-to-favorites/{mealType}/{mealId}', name: 'add_to_favorites', methods: ['POST'])]
     public function addToFavorites($mealType, $mealId): JsonResponse
     {
         $user = $this->getUser();
@@ -30,7 +30,7 @@ class FavouriteMealController extends AbstractController
         return new JsonResponse($result, $result['status'] === 'success' ? 200 : 404);
     }
 
-    #[Route('/remove-from-favorites/{mealType}/{mealId}', name: 'remove_from_favorites', methods: ['POST'])]
+    #[Route('/api/remove-from-favorites/{mealType}/{mealId}', name: 'remove_from_favorites', methods: ['POST'])]
     public function removeFromFavorites($mealType, $mealId): JsonResponse
     {
         $user = $this->getUser();
@@ -42,20 +42,16 @@ class FavouriteMealController extends AbstractController
         return new JsonResponse($result, $result['status'] === 'success' ? 200 : 404);
     }
 
-    #[Route('/favourites', name: 'app_favourites')]
-    public function index(FavouriteMealRepository $favouriteMealRepository): Response
+    #[Route('/api/favourites', name: 'app_favourites', methods: ['GET'])]
+    public function index(FavouriteMealRepository $favouriteMealRepository): JsonResponse
     {
         $user = $this->getUser();
         if (!$user) {
-            throw $this->createNotFoundException('User not found.');
+            return new JsonResponse(['status' => 'error', 'message' => 'User not authenticated'], 401);
         }
 
         $groupedFavourites = $this->favouriteMealService->getGroupedFavoritesByUser($favouriteMealRepository);
 
-        return $this->render('favourite_meal/index.html.twig', [
-            'groupedFavourites' => $groupedFavourites,
-        ]);
+        return new JsonResponse($groupedFavourites);
     }
-
-
 }

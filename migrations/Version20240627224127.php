@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240402231721 extends AbstractMigration
+final class Version20240627224127 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -23,6 +23,7 @@ final class Version20240402231721 extends AbstractMigration
         $this->addSql('CREATE TABLE favourite_meal (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, meal_id INT DEFAULT NULL, meal_name VARCHAR(255) NOT NULL, meal_type VARCHAR(255) NOT NULL, INDEX IDX_3AE4853DA76ED395 (user_id), INDEX IDX_3AE4853D639666D6 (meal_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE meal_plan (id INT AUTO_INCREMENT NOT NULL, userid_id INT NOT NULL, week_id INT NOT NULL, INDEX IDX_C784888958E0A285 (userid_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE meals (id INT AUTO_INCREMENT NOT NULL, meal_plan_id INT DEFAULT NULL, day_of_week VARCHAR(255) NOT NULL, breakfast JSON DEFAULT NULL COMMENT \'(DC2Type:json)\', brunch JSON DEFAULT NULL COMMENT \'(DC2Type:json)\', lunch JSON DEFAULT NULL COMMENT \'(DC2Type:json)\', snack JSON DEFAULT NULL COMMENT \'(DC2Type:json)\', dinner JSON DEFAULT NULL COMMENT \'(DC2Type:json)\', INDEX IDX_E229E6EA912AB082 (meal_plan_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE post (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, content LONGTEXT NOT NULL, author VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE profile (id INT AUTO_INCREMENT NOT NULL, userid_id INT NOT NULL, weight DOUBLE PRECISION NOT NULL, height DOUBLE PRECISION NOT NULL, age INT NOT NULL, gender VARCHAR(255) NOT NULL, activitylevel VARCHAR(255) NOT NULL, dietpreferences VARCHAR(255) DEFAULT NULL, allergies VARCHAR(255) DEFAULT NULL, caloricdemand DOUBLE PRECISION DEFAULT NULL, UNIQUE INDEX UNIQ_8157AA0F58E0A285 (userid_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE shopping_list (id INT AUTO_INCREMENT NOT NULL, meal_plan_id INT DEFAULT NULL, shopping_list VARCHAR(2048) DEFAULT NULL, UNIQUE INDEX UNIQ_3DC1A459912AB082 (meal_plan_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE user (id INT AUTO_INCREMENT NOT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL COMMENT \'(DC2Type:json)\', password VARCHAR(255) NOT NULL, second_password VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_8D93D649E7927C74 (email), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
@@ -47,6 +48,7 @@ final class Version20240402231721 extends AbstractMigration
         $this->addSql('DROP TABLE favourite_meal');
         $this->addSql('DROP TABLE meal_plan');
         $this->addSql('DROP TABLE meals');
+        $this->addSql('DROP TABLE post');
         $this->addSql('DROP TABLE profile');
         $this->addSql('DROP TABLE shopping_list');
         $this->addSql('DROP TABLE user');

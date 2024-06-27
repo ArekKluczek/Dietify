@@ -1,52 +1,67 @@
-"use client";
+'use client'
+import React, { useEffect, useState, useCallback } from 'react';
+import apiClient from "../services/apiClient";
+import withAuth from '../services/auth';
 
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+interface ProfileData {
+    id: string;
+    height: string;
+    weight: string;
+    age: string;
+    gender: string;
+    activitylevel: string;
+    dietpreferences: string;
+    allergies: string;
+}
 
-const Profile = () => {
-    const [profile, setProfile] = useState({
-        height: '',
-        weight: '',
-        age: '',
-        gender: '',
-        activitylevel: '',
-        dietpreferences: '',
-        allergies: '',
-    });
+const Profile: React.FC = () => {
+    const [profile, setProfile] = useState<ProfileData | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        axios.get('/api/profile')
-            .then(response => {
-                if (response.data && response.data.id) {
-                    setProfile(response.data);
-                } else {
-                    console.error('Profile data does not include id:', response.data);
-                }
-            })
-            .catch(error => console.error('Error fetching profile:', error));
+        const fetchProfile = async () => {
+            try {
+                const response = await apiClient.get<ProfileData>('/profile');
+                setProfile(response.data);
+            } catch (error) {
+                setError('Error fetching profile data.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProfile();
     }, []);
 
-    const handleChange = (e) => {
-        setProfile({ ...profile, [e.target.name]: e.target.value });
-    };
+    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        if (profile) {
+            setProfile({ ...profile, [e.target.name]: e.target.value });
+        }
+    }, [profile]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        axios.post('/api/profile', profile)
-            .then(response => {
-                console.log('Profile updated:', response.data);
-            })
-            .catch(error => {
-                console.error('Error updating profile:', error);
-            });
-    };
+        if (profile) {
+            try {
+                await apiClient.post('/profile', profile);
+            } catch (error) {
+                setError('Error updating profile.');
+            }
+        }
+    }, [profile]);
+
+    if (error) {
+        return <div>{error}</div>;
+    }
 
     return (
         <div>
             <div className="sidebar">
                 <a href="/profile">Profile</a>
-                <a href={`/user/${profile.id}`}>Settings</a>
+                <a href={`/user/${profile?.id}`}>Settings</a>
                 <a href="/favourites">Favourites</a>
+                <a href="/forum">Forum</a>
             </div>
 
             <div className="profile-form">
@@ -58,7 +73,7 @@ const Profile = () => {
                                 type="number"
                                 id="weight"
                                 name="weight"
-                                value={profile.weight}
+                                value={profile?.weight}
                                 onChange={handleChange}
                                 className="form-control"
                             />
@@ -69,7 +84,7 @@ const Profile = () => {
                                 type="number"
                                 id="height"
                                 name="height"
-                                value={profile.height}
+                                value={profile?.height}
                                 onChange={handleChange}
                                 className="form-control"
                             />
@@ -80,7 +95,7 @@ const Profile = () => {
                                 type="number"
                                 id="age"
                                 name="age"
-                                value={profile.age}
+                                value={profile?.age}
                                 onChange={handleChange}
                                 className="form-control"
                             />
@@ -90,7 +105,7 @@ const Profile = () => {
                             <select
                                 id="gender"
                                 name="gender"
-                                value={profile.gender}
+                                value={profile?.gender}
                                 onChange={handleChange}
                                 className="form-control"
                             >
@@ -105,7 +120,7 @@ const Profile = () => {
                                 type="text"
                                 id="activitylevel"
                                 name="activitylevel"
-                                value={profile.activitylevel}
+                                value={profile?.activitylevel}
                                 onChange={handleChange}
                                 className="form-control"
                             />
@@ -116,7 +131,7 @@ const Profile = () => {
                                 type="text"
                                 id="dietpreferences"
                                 name="dietpreferences"
-                                value={profile.dietpreferences}
+                                value={profile?.dietpreferences}
                                 onChange={handleChange}
                                 className="form-control"
                             />
@@ -127,7 +142,7 @@ const Profile = () => {
                                 type="text"
                                 id="allergies"
                                 name="allergies"
-                                value={profile.allergies}
+                                value={profile?.allergies}
                                 onChange={handleChange}
                                 className="form-control"
                             />
@@ -141,4 +156,4 @@ const Profile = () => {
     );
 };
 
-export default Profile;
+export default withAuth(Profile);

@@ -2,22 +2,29 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import apiClient from '../apiClient';
+import apiClient from "../services/apiClient";
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import { AxiosError } from 'axios';
 
 const Login = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState(null);
     const router = useRouter();
+    const [error, setError] = useState<string | null>(null);
 
-    const handleSubmit = async (e: { preventDefault: () => void; }) => {
-        e.preventDefault();
+    const initialValues = {
+        username: '',
+        password: '',
+    };
+
+    const validationSchema = Yup.object({
+        username: Yup.string().email('Invalid email format').required('Email is required'),
+        password: Yup.string().required('Password is required'),
+    });
+
+    const handleSubmit = async (values: { username: string; password: string }) => {
         try {
-            console.log('Submitting login data:', { username, password });
-            const response = await apiClient.post('/login', {
-                username,
-                password,
-            });
+            console.log('Submitting login data:', values);
+            const response = await apiClient.post('/login', values);
             console.log('Response:', response);
             if (response.data.status === 'success') {
                 localStorage.setItem('token', response.data.token);
@@ -26,10 +33,9 @@ const Login = () => {
             } else {
                 setError(response.data.message);
             }
-        } catch (error) {
-            // @ts-ignore
+        } catch (err) {
+            const error = err as AxiosError<{ message: string }>;
             console.error('Error:', error.response || error.message);
-            // @ts-ignore
             setError(error.response?.data.message || 'An error occurred. Please try again.');
         }
     };
@@ -37,33 +43,47 @@ const Login = () => {
     return (
         <div className="form-container">
             {error && <div className="alert alert-danger">{error}</div>}
-            <form onSubmit={handleSubmit} className="form-signin">
-                <h1>Please sign in</h1>
-                <label htmlFor="username">Email</label>
-                <input
-                    type="email"
-                    value={username}
-                    name="username"
-                    id="username"
-                    className="form-control"
-                    autoComplete="email"
-                    required
-                    autoFocus
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-                <label htmlFor="password">Password</label>
-                <input
-                    type="password"
-                    name="password"
-                    id="password"
-                    className="form-control"
-                    autoComplete="current-password"
-                    required
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <button type="submit">SIGN IN</button>
-            </form>
+            <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+            >
+                {({ isSubmitting }) => (
+                    <Form className="form-signin">
+                        <h1>Please sign in</h1>
+                        <div>
+                            <label htmlFor="username">Email</label>
+                            <Field
+                                type="email"
+                                name="username"
+                                id="username"
+                                className="form-control"
+                                autoComplete="email"
+                                required
+                            />
+                            <ErrorMessage name="username" component="div" className="error-message" />
+                        </div>
+                        <div>
+                            <label htmlFor="password">Password</label>
+                            <Field
+                                type="password"
+                                name="password"
+                                id="password"
+                                className="form-control"
+                                autoComplete="current-password"
+                                required
+                            />
+                            <ErrorMessage name="password" component="div" className="error-message" />
+                        </div>
+                        <button type="submit" disabled={isSubmitting}>
+                            SIGN IN
+                        </button>
+                    </Form>
+                )}
+            </Formik>
+            <div className="elipse-login"></div>
         </div>
     );
 };
+
 export default Login;

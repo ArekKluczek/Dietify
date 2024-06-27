@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +20,7 @@ class RegistrationController extends AbstractController
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
         EntityManagerInterface $entityManager,
+        JWTTokenManagerInterface $jwtManager,
         SessionInterface $session
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
@@ -54,6 +56,8 @@ class RegistrationController extends AbstractController
 
         $session->set('user', $user);
 
-        return new JsonResponse([], Response::HTTP_CREATED);
+        $token = $jwtManager->create($user);
+
+        return new JsonResponse(['status' => 'success', 'token' => $token], Response::HTTP_CREATED);
     }
 }

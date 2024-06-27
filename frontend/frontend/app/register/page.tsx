@@ -1,39 +1,48 @@
-'use client'
+'use client';
 
-import {useState} from 'react';
-import apiClient from '../apiClient';
-import {router} from "next/client";
-import {useRouter} from "next/navigation";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import apiClient from "../services/apiClient";
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import { AxiosError } from 'axios';
 
 const Register = () => {
-    const [formData, setFormData] = useState({
+    const router = useRouter();
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
+
+    const initialValues = {
         email: '',
         plainPassword: '',
         secondPassword: '',
-    });
-
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
-    const router = useRouter();
-
-    const handleChange = (e: { target: { name: any; value: any; }; }) => {
-        setFormData({...formData, [e.target.name]: e.target.value});
     };
 
-    const handleSubmit = async (e: { preventDefault: () => void; }) => {
-        e.preventDefault();
+    const validationSchema = Yup.object({
+        email: Yup.string().email('Invalid email format').required('Email is required'),
+        plainPassword: Yup.string().required('Password is required'),
+        secondPassword: Yup.string()
+            .oneOf([Yup.ref('plainPassword')], 'Passwords must match')
+            .required('Confirm password is required'),
+    });
+
+    const handleSubmit = async (values: { email: string; plainPassword: string; secondPassword: string }) => {
         try {
-            console.log('Submitting form data:', formData);
-            const response = await apiClient.post('/register', formData);
+            console.log('Submitting form data:', values);
+            const response = await apiClient.post('/register', values);
             console.log('Response:', response);
-            setSuccess(response.data.message);
-            setError(null);
-            router.push('/login');
-        } catch (error) {
-            // @ts-ignore
+            if (response.data.status === 'success') {
+                localStorage.setItem('token', response.data.token);
+                setError(null);
+                setSuccess('Registration successful!');
+                await router.push('/');
+            } else {
+                setError(response.data.message);
+            }
+        } catch (err) {
+            const error = err as AxiosError;
             console.error('Error:', error.response || error.message);
-            // @ts-ignore
-            setError(error.response?.data.errors || 'An error occurred');
+            setError('An error occurred. Please try again.');
             setSuccess(null);
         }
     };
@@ -43,23 +52,32 @@ const Register = () => {
             <h1 className="h3 mb-3 font-weight-normal">Registration</h1>
             {error && <div className="alert alert-danger">{error}</div>}
             {success && <div className="alert alert-success">{success}</div>}
-            <form className={"registration_form"} onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="email">Email</label>
-                    <input type="email" name="email" value={formData.email} onChange={handleChange} required/>
-                </div>
-                <div>
-                    <label htmlFor="plainPassword">Password</label>
-                    <input type="password" name="plainPassword" value={formData.plainPassword} onChange={handleChange}
-                           required/>
-                </div>
-                <div>
-                    <label htmlFor="secondPassword">Repeat Password</label>
-                    <input type="password" name="secondPassword" value={formData.secondPassword} onChange={handleChange}
-                           required/>
-                </div>
-                <button type="submit">REGISTER</button>
-            </form>
+            <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+            >
+                {({ isSubmitting }) => (
+                    <Form className="registration_form">
+                        <div>
+                            <label htmlFor="email">Email</label>
+                            <Field type="email" name="email" required />
+                            <ErrorMessage name="email" component="div" className="error-message" />
+                        </div>
+                        <div>
+                            <label htmlFor="plainPassword">Password</label>
+                            <Field type="password" name="plainPassword" required />
+                            <ErrorMessage name="plainPassword" component="div" className="error-message" />
+                        </div>
+                        <div>
+                            <label htmlFor="secondPassword">Repeat Password</label>
+                            <Field type="password" name="secondPassword" required />
+                            <ErrorMessage name="secondPassword" component="div" className="error-message" />
+                        </div>
+                        <button type="submit" disabled={isSubmitting}>REGISTER</button>
+                    </Form>
+                )}
+            </Formik>
             <div className="elipse-left"></div>
         </div>
     );

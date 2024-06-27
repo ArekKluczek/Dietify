@@ -1,12 +1,12 @@
-import HowItWorksComponent from '../howItWorksComponent/page';
+import HowItWorks from "../components/HowItWorks";
 import '../globals.scss';
 
-const HowItWorks = ({ user }) => {
+const HowItWorksPage = () => {
     return (
         <>
-            <HowItWorksComponent />
+            <HowItWorks />
         </>
     );
 };
 
-export default HowItWorks;
+export default HowItWorksPage;
