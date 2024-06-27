@@ -43,7 +43,7 @@ const Header: React.FC = () => {
         localStorage.removeItem('token');
         router.push('/');
         setUser(null);
-        setIsOpen(false); // Close menu on logout
+        setIsOpen(false);
     };
 
     const toggleMenu = () => {

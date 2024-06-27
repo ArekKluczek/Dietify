@@ -10,7 +10,7 @@ export const downloadShoppingList = async () => {
         link.setAttribute('download', 'shopping_list.csv');
         document.body.appendChild(link);
         link.click();
-        document.body.removeChild(link); // Clean up the link element
+        document.body.removeChild(link);
     } catch (error) {
         console.error('Error downloading shopping list:', error);
     }
